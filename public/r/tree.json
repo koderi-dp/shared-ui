@@ -4,8 +4,8 @@
   "title": "Tree",
   "description": "The Tree, TreeItem and drag primitives, and useTreeController: one flat list in, a headless-tree instance out, with the data loader, the root and the usual features wired for you.",
   "dependencies": [
-    "@headless-tree/core@^1.7.0",
-    "@headless-tree/react@^1.7.0",
+    "@headless-tree/core@^1.8.0",
+    "@headless-tree/react@^1.8.0",
     "lucide-react@^0.510.0"
   ],
   "devDependencies": [
