@@ -8,7 +8,6 @@ import {
   type TreeInstance,
 } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
-import { useMemo } from "react";
 import { preventScrollFocusFeature } from "@/ui/primitives/tree-focus";
 
 /** The id the root of a tree is expected to carry when it is not passed explicitly. */
@@ -109,6 +108,21 @@ export function createTreeIndex<T>(
   };
 }
 
+/** Expansion and keyboard, selection and drag-and-drop on request, the focus fix last. */
+export function treeFeatures<T = unknown>({
+  selectable,
+  draggable,
+}: { selectable?: boolean; draggable?: boolean } = {}): FeatureImplementation<T>[] {
+  return [
+    syncDataLoaderFeature,
+    hotkeysCoreFeature,
+    ...(selectable ? [selectionFeature] : []),
+    ...(draggable ? [dragAndDropFeature] : []),
+    // Last: the other features never touch updateDomFocus, but it means to be last.
+    preventScrollFocusFeature,
+  ];
+}
+
 export type TreeControllerOptions<T> = TreeAccessors<T> & {
   /** The flat list. One item is the root: name it with rootId, or leave one with no parent. */
   items: T[];
@@ -128,11 +142,11 @@ export type TreeControllerOptions<T> = TreeAccessors<T> & {
 };
 
 /**
- * The whole of a tree's wiring, in one call: the flat list in, a headless-tree instance
- * out, with the data loader and the usual features already set. Render it with the `Tree`
- * and `TreeItem` primitives, and own only the data and the actions.
+ * The headless-tree config for a flat list: the loader built, the root resolved, the label
+ * and folder test read off the item, and the usual features set. Pure, so it can be built
+ * and driven without React.
  */
-export function useTreeController<T>({
+export function buildTreeConfig<T>({
   items,
   getId,
   getParentId,
@@ -144,26 +158,9 @@ export function useTreeController<T>({
   draggable,
   features,
   tree,
-}: TreeControllerOptions<T>): TreeInstance<T> {
-  const index = useMemo(
-    () => createTreeIndex(items, { getId, getParentId, rootId }),
-    [items, getId, getParentId, rootId],
-  );
-
-  const resolvedFeatures = useMemo<FeatureImplementation<T>[]>(
-    () =>
-      features ?? [
-        syncDataLoaderFeature,
-        hotkeysCoreFeature,
-        ...(selectable ? [selectionFeature] : []),
-        ...(draggable ? [dragAndDropFeature] : []),
-        // Last: the other features never touch updateDomFocus, but it means to be last.
-        preventScrollFocusFeature,
-      ],
-    [features, selectable, draggable],
-  );
-
-  return useTree<T>({
+}: TreeControllerOptions<T>): TreeConfig<T> {
+  const index = createTreeIndex(items, { getId, getParentId, rootId });
+  return {
     indent,
     ...tree,
     rootItemId: index.rootId,
@@ -171,6 +168,16 @@ export function useTreeController<T>({
     isItemFolder: (item) =>
       isFolder ? isFolder(item.getItemData()) : index.hasChildren(item.getId()),
     dataLoader: index.dataLoader,
-    features: resolvedFeatures,
-  });
+    features: features ?? treeFeatures<T>({ selectable, draggable }),
+  };
+}
+
+/**
+ * The whole of a tree's wiring, in one call: the flat list in, a headless-tree instance
+ * out. Render it with the `Tree` and `TreeItem` primitives, and own only the data and the
+ * actions. A structural change to the items needs `tree.rebuildTree()`: the tree reads
+ * through the loader, and a new loader alone does not make it re-read.
+ */
+export function useTreeController<T>(options: TreeControllerOptions<T>): TreeInstance<T> {
+  return useTree<T>(buildTreeConfig(options));
 }

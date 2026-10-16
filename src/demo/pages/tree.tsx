@@ -5,7 +5,7 @@ import {
   FolderTree as FolderTreeIcon,
   GripVertical,
 } from "lucide-react";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { PageHeader } from "@/ui/page-header";
 import { PageShell } from "@/ui/page-shell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/primitives/card";
@@ -14,14 +14,9 @@ import { Switch } from "@/ui/primitives/switch";
 import { Tree, TreeDragHandle, TreeItem, TreeItemLabel } from "@/ui/primitives/tree";
 import { TREE_ROOT, useTreeController } from "@/ui/tree-controller";
 
-type DemoNode = {
-  id: string;
-  parentId: string | null;
-  name: string;
-  kind: "root" | "folder" | "file";
-};
+type Node = { id: string; parentId: string | null; name: string; kind: "root" | "folder" | "file" };
 
-const INITIAL: DemoNode[] = [
+const INITIAL: Node[] = [
   { id: TREE_ROOT, parentId: null, name: "workspace", kind: "root" },
   { id: "src", parentId: TREE_ROOT, name: "src", kind: "folder" },
   { id: "src/ui", parentId: "src", name: "ui", kind: "folder" },
@@ -35,7 +30,13 @@ const INITIAL: DemoNode[] = [
   { id: "package.json", parentId: TREE_ROOT, name: "package.json", kind: "file" },
 ];
 
-function isAncestor(nodes: DemoNode[], ancestorId: string, id: string): boolean {
+// Stable identities, so the loader is not rebuilt for nothing on every render.
+const getId = (node: Node) => node.id;
+const getParentId = (node: Node) => node.parentId;
+const getItemName = (node: Node) => node.name;
+const isFolder = (node: Node) => node.kind !== "file";
+
+function isAncestor(nodes: Node[], ancestorId: string, id: string): boolean {
   let current = nodes.find((node) => node.id === id)?.parentId ?? null;
   while (current) {
     if (current === ancestorId) return true;
@@ -50,40 +51,37 @@ export function TreePage() {
   const [draggable, setDraggable] = useState(true);
   const [selected, setSelected] = useState<string[]>([]);
 
-  const tree = useTreeController<DemoNode>({
+  const tree = useTreeController<Node>({
     items: nodes,
-    getId: (node) => node.id,
-    getParentId: (node) => node.parentId,
-    getItemName: (node) => node.name,
-    isFolder: (node) => node.kind !== "file",
+    getId,
+    getParentId,
+    getItemName,
+    isFolder,
     selectable: true,
     draggable,
-    tree: useMemo(
-      () => ({
-        state: { selectedItems: selected },
-        setSelectedItems: (updater: string[] | ((old: string[]) => string[])) =>
-          setSelected(typeof updater === "function" ? updater(selected) : updater),
-        // Drop into a folder only, so a drop is a move with no position to work out.
-        canReorder: false,
-        canDrop: (items: { getId: () => string }[], target: { item: { getId: () => string } }) => {
-          const to = target.item.getId();
-          return items.every((item) => item.getId() !== to && !isAncestor(nodes, item.getId(), to));
-        },
-        onDrop: (items: { getId: () => string }[], target: { item: { getId: () => string } }) => {
-          const to = target.item.getId();
-          const moved = new Set(items.map((item) => item.getId()));
-          setNodes((prev) =>
-            prev.map((node) => (moved.has(node.id) ? { ...node, parentId: to } : node)),
-          );
-        },
-      }),
-      [nodes, selected],
-    ),
+    tree: {
+      state: { selectedItems: selected },
+      setSelectedItems: (updater) =>
+        setSelected(typeof updater === "function" ? updater(selected) : updater),
+      // Drop into a folder only, so a drop is a move with no position to work out.
+      canReorder: false,
+      canDrop: (items, target) => {
+        const to = target.item.getId();
+        return items.every((item) => item.getId() !== to && !isAncestor(nodes, item.getId(), to));
+      },
+      onDrop: (items, target) => {
+        const to = target.item.getId();
+        const moved = new Set(items.map((item) => item.getId()));
+        setNodes((prev) =>
+          prev.map((node) => (moved.has(node.id) ? { ...node, parentId: to } : node)),
+        );
+      },
+    },
   });
 
-  // The loader reads through closures; tell the tree when the shape changes.
+  // The tree reads through the loader; a new loader alone does not make it re-read.
   const structureKey = nodes.map((node) => `${node.id}:${node.parentId}`).join("|");
-  useLayoutEffect(() => {
+  useEffect(() => {
     tree.rebuildTree();
   }, [tree, structureKey]);
 
@@ -94,7 +92,7 @@ export function TreePage() {
       <PageHeader
         kicker="Registry"
         title="Tree"
-        description="One flat list in, a tree out: the loader and the usual features are wired for you."
+        description="One flat list in, a tree out: the loader, the root and the usual features are wired for you."
       />
       <Card>
         <CardHeader>
@@ -102,8 +100,8 @@ export function TreePage() {
             <div className="grid gap-1.5">
               <CardTitle>Files</CardTitle>
               <CardDescription>
-                Arrow keys move, left and right open and close, and Enter opens. Turn on drag to
-                move a row into a folder.
+                Arrow keys move, left and right open and close, and Enter opens. Turn off drag to
+                drop the drag handles.
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
