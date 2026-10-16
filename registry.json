@@ -564,6 +564,41 @@
       ]
     },
     {
+      "name": "tree",
+      "type": "registry:component",
+      "title": "Tree",
+      "description": "The Tree, TreeItem and drag primitives, and useTreeController: one flat list in, a headless-tree instance out, with the data loader, the root and the usual features wired for you.",
+      "dependencies": [
+        "@headless-tree/core@^1.7.0",
+        "@headless-tree/react@^1.7.0",
+        "lucide-react@^0.510.0"
+      ],
+      "devDependencies": ["vitest@^4.1.11"],
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/tree.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/tree.tsx"
+        },
+        {
+          "path": "src/ui/primitives/tree-focus.ts",
+          "type": "registry:file",
+          "target": "src/ui/primitives/tree-focus.ts"
+        },
+        {
+          "path": "src/ui/tree-controller.ts",
+          "type": "registry:file",
+          "target": "src/ui/tree-controller.ts"
+        },
+        {
+          "path": "src/ui/tree-controller.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/tree-controller.test.ts"
+        }
+      ]
+    },
+    {
       "name": "app-shell",
       "type": "registry:component",
       "title": "App shell",
@@ -625,6 +660,7 @@
         "@koderi/use-persisted",
         "@koderi/nav",
         "@koderi/command-palette",
+        "@koderi/tree",
         "@koderi/app-shell"
       ]
     }

@@ -37,6 +37,7 @@
     "@koderi/use-persisted",
     "@koderi/nav",
     "@koderi/command-palette",
+    "@koderi/tree",
     "@koderi/app-shell"
   ],
   "type": "registry:item"

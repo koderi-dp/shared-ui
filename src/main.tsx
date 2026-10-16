@@ -7,6 +7,7 @@ import { DetailPage } from "./demo/pages/detail";
 import { OverviewPage } from "./demo/pages/overview";
 import { PrimitivesPage } from "./demo/pages/primitives";
 import { SettingsPage } from "./demo/pages/settings";
+import { TreePage } from "./demo/pages/tree";
 import { RootLayout, ShellLayout } from "./demo/shell";
 import "./styles.css";
 
@@ -34,6 +35,11 @@ const blocksRoute = createRoute({
   path: "/blocks",
   component: BlocksPage,
 });
+const treeRoute = createRoute({
+  getParentRoute: () => shellRoute,
+  path: "/tree",
+  component: TreePage,
+});
 const chartsRoute = createRoute({
   getParentRoute: () => shellRoute,
   path: "/charts",
@@ -55,6 +61,7 @@ const routeTree = rootRoute.addChildren([
     overviewRoute,
     primitivesRoute,
     blocksRoute,
+    treeRoute,
     chartsRoute,
     detailRoute,
     settingsRoute,
