@@ -2,6 +2,7 @@ import { createContext, useContext, type HTMLAttributes } from "react";
 import type { ItemInstance, TreeInstance } from "@headless-tree/core";
 import { ChevronDown, ChevronRight, Minus, Plus } from "lucide-react";
 import { cn } from "@/ui/utils";
+import { selectOnClick } from "./tree-select";
 
 type TreeContextValue<T> = {
   indent: number;
@@ -84,6 +85,7 @@ export function TreeItem<T>({
           if (e.defaultPrevented) return;
           // Ignore bubbled clicks — label/chevron/drag handle handle their own.
           if (e.target !== e.currentTarget) return;
+          selectOnClick(item, e);
           item.setFocused();
           item.getTree().updateDomFocus();
           item.primaryAction();
@@ -136,6 +138,7 @@ export function TreeItemLabel<T>({
         node.getTree().updateDomFocus();
         onClick?.(e);
         if (e.defaultPrevented) return;
+        selectOnClick(node, e);
         node.primaryAction();
       }}
       {...props}

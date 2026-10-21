@@ -617,6 +617,16 @@
           "target": "src/ui/primitives/tree-focus.ts"
         },
         {
+          "path": "src/ui/primitives/tree-select.ts",
+          "type": "registry:file",
+          "target": "src/ui/primitives/tree-select.ts"
+        },
+        {
+          "path": "src/ui/primitives/tree-select.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/primitives/tree-select.test.ts"
+        },
+        {
           "path": "src/ui/tree-controller.ts",
           "type": "registry:file",
           "target": "src/ui/tree-controller.ts"

@@ -13,6 +13,7 @@ import { Label } from "@/ui/primitives/label";
 import { Switch } from "@/ui/primitives/switch";
 import { Tree, TreeDragHandle, TreeItem, TreeItemLabel } from "@/ui/primitives/tree";
 import { TREE_ROOT, useTreeController } from "@/ui/tree-controller";
+import { isAncestor, moveNodes } from "../file-tree";
 
 type Node = { id: string; parentId: string | null; name: string; kind: "root" | "folder" | "file" };
 
@@ -36,15 +37,6 @@ const getParentId = (node: Node) => node.parentId;
 const getItemName = (node: Node) => node.name;
 const isFolder = (node: Node) => node.kind !== "file";
 
-function isAncestor(nodes: Node[], ancestorId: string, id: string): boolean {
-  let current = nodes.find((node) => node.id === id)?.parentId ?? null;
-  while (current) {
-    if (current === ancestorId) return true;
-    current = nodes.find((node) => node.id === current)?.parentId ?? null;
-  }
-  return false;
-}
-
 /** The tree item on a page of its own: the whole controller, and one row per item. */
 export function TreePage() {
   const [nodes, setNodes] = useState(INITIAL);
@@ -63,18 +55,16 @@ export function TreePage() {
       state: { selectedItems: selected },
       setSelectedItems: (updater) =>
         setSelected(typeof updater === "function" ? updater(selected) : updater),
-      // Drop into a folder only, so a drop is a move with no position to work out.
-      canReorder: false,
+      // A drop on a folder goes last in it; a drop between rows goes at the drag line.
+      canReorder: true,
       canDrop: (items, target) => {
         const to = target.item.getId();
         return items.every((item) => item.getId() !== to && !isAncestor(nodes, item.getId(), to));
       },
       onDrop: (items, target) => {
-        const to = target.item.getId();
-        const moved = new Set(items.map((item) => item.getId()));
-        setNodes((prev) =>
-          prev.map((node) => (moved.has(node.id) ? { ...node, parentId: to } : node)),
-        );
+        const ids = items.map((item) => item.getId());
+        const index = "insertionIndex" in target ? target.insertionIndex : undefined;
+        setNodes((prev) => moveNodes(prev, ids, target.item.getId(), index));
       },
     },
   });
@@ -100,8 +90,9 @@ export function TreePage() {
             <div className="grid gap-1.5">
               <CardTitle>Files</CardTitle>
               <CardDescription>
-                Arrow keys move, left and right open and close, and Enter opens. Turn off drag to
-                drop the drag handles.
+                Arrow keys move, left and right open and close, and Enter opens. Drag a row onto a
+                folder to move it in, or between rows to place it. Turn off drag to drop the
+                handles.
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
