@@ -368,7 +368,7 @@ export function PrimitivesPage() {
           </ScrollArea>
         </Section>
 
-        <Section title="Toasts" description="One set of words, from `notify`.">
+        <Section title="Toasts" description="One set of words for every page, from notify.">
           <div className="flex flex-wrap items-center gap-2">
             <Button icon={Bell} onClick={() => notify.success("Something went right")}>
               success
@@ -395,8 +395,8 @@ export function PrimitivesPage() {
         </Section>
 
         <Section
-          title="Chips and icons"
-          description="The header chip class, and the icon set in use."
+          title="Icons"
+          description="The lucide icons the pages use, at the size they use them."
         >
           <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
             <Sparkles className="size-4" />

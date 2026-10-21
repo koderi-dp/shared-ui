@@ -4,6 +4,7 @@ import {
   FileText,
   FolderTree,
   LayoutPanelLeft,
+  PanelsTopLeft,
   Settings,
   Table2,
 } from "lucide-react";
@@ -19,7 +20,7 @@ export const demoNav: NavConfig = {
     { to: "/tree", label: "Tree", icon: FolderTree, keywords: ["hierarchy", "folders", "files"] },
     { to: "/data-grid", label: "Data grid", icon: Table2, keywords: ["table", "columns"] },
     { to: "/charts", label: "Charts", icon: LayoutPanelLeft, keywords: ["metrics", "timeline"] },
-    { to: "/detail/atlas", label: "Detail", icon: FileText, keywords: ["record", "item"] },
+    { to: "/detail/itm-01", label: "Detail", icon: PanelsTopLeft, keywords: ["record", "item"] },
   ],
   secondary: [{ to: "/settings", label: "Settings", icon: Settings, keywords: ["preferences"] }],
 };

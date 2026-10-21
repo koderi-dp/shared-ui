@@ -121,8 +121,9 @@ export function DataGridPage() {
   const [opened, setOpened] = useState<string | null>(null);
 
   return (
-    <PageShell>
+    <PageShell gap="loose">
       <PageHeader
+        kicker="Registry"
         title="Data grid"
         description="One table component: column widths remembered per grid, pinned and sortable columns, and the progress, status and tags column types."
       />

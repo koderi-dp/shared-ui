@@ -1,5 +1,5 @@
 import { useParams } from "@tanstack/react-router";
-import { Boxes, CircleStop, Copy, Play, RefreshCw, Trash2 } from "lucide-react";
+import { Boxes, Copy, Pause, Play, RefreshCw, Trash2 } from "lucide-react";
 import { useState } from "react";
 import {
   DetailEmpty,
@@ -13,15 +13,17 @@ import { Field, NumberInput, SwitchField } from "@/ui/form";
 import { notify } from "@/ui/notify";
 import { Button } from "@/ui/primitives/button";
 import { StatusBadge } from "@/ui/status";
+import { statusLabel } from "@/ui/status-text";
 import { formatBytes, formatDuration } from "@/ui/utils";
-import { demoItems } from "../data";
+import { type DemoItem, demoItems } from "../data";
 
 type TabId = "overview" | "settings" | "jobs";
 
 const TABS: readonly DetailTabDefinition<TabId>[] = [
   { id: "overview", label: "Overview" },
   { id: "settings", label: "Settings" },
-  { id: "jobs", label: "Jobs", count: 3 },
+  // No count: the tab shows the empty state, and a count would contradict it.
+  { id: "jobs", label: "Jobs" },
 ];
 
 /** The detail frame: a title bar, a tab strip, an action rail and a footer. */
@@ -29,9 +31,15 @@ export function DetailPage() {
   // `strict: false` keeps this showcase free of route-id plumbing.
   const params = useParams({ strict: false }) as { id?: string };
   const item = demoItems.find((row) => row.id === params.id) ?? demoItems[0];
+  // Keyed, so moving to another item starts its tabs and settings afresh.
+  return <ItemDetail key={item.id} item={item} />;
+}
+
+function ItemDetail({ item }: { item: DemoItem }) {
   const [tab, setTab] = useState<TabId>("overview");
   const [workers, setWorkers] = useState(item.id === "itm-01" ? 4 : 2);
   const [paused, setPaused] = useState(false);
+  const state = paused ? "stopped" : item.state;
 
   return (
     <DetailShell
@@ -42,7 +50,7 @@ export function DetailPage() {
           {item.owner} · <span className="font-mono">{item.id}</span>
         </>
       }
-      badge={<StatusBadge state={item.state} />}
+      badge={<StatusBadge state={state} />}
       tabs={TABS}
       activeTab={tab}
       onActiveTabChange={setTab}
@@ -51,7 +59,7 @@ export function DetailPage() {
         {
           id: "toggle",
           label: paused ? "Resume" : "Pause",
-          icon: paused ? Play : CircleStop,
+          icon: paused ? Play : Pause,
           variant: "primary",
           onClick: () => {
             setPaused((value) => !value);
@@ -75,7 +83,7 @@ export function DetailPage() {
           label: "Delete",
           icon: Trash2,
           variant: "danger",
-          disabled: item.state === "running",
+          disabled: state === "running",
           onClick: () => notify.deleted("Item"),
         },
       ]}
@@ -90,11 +98,11 @@ export function DetailPage() {
         <div className="grid gap-4 p-4">
           <DetailSection title="Summary">
             <OverviewPanel>
-              <OverviewRow label="State" value={item.state} />
+              <OverviewRow label="State" value={statusLabel(state)} />
               <OverviewRow label="Owner" value={item.owner} />
               <OverviewRow
                 label="Uptime"
-                value={item.uptimeMs ? formatDuration(item.uptimeMs) : "—"}
+                value={!paused && item.uptimeMs ? formatDuration(item.uptimeMs) : "—"}
               />
               <OverviewRow label="Stored" value={formatBytes(item.bytes)} />
               <OverviewRow label="Reference" copy={item.id} mono value={item.id} />

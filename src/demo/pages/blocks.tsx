@@ -6,6 +6,7 @@ import { notify } from "@/ui/notify";
 import { PageHeader } from "@/ui/page-header";
 import { PageShell } from "@/ui/page-shell";
 import { Button } from "@/ui/primitives/button";
+import { Checkbox } from "@/ui/primitives/checkbox";
 import {
   Table,
   TableBody,
@@ -21,16 +22,26 @@ import { demoItems } from "../data";
 /** The furniture around a list page: header, filter bar, selection toolbar, confirm step. */
 export function BlocksPage() {
   const [filter, setFilter] = useState("");
+  const [items, setItems] = useState(demoItems);
   const [selected, setSelected] = useState<string[]>(demoItems.slice(0, 2).map((item) => item.id));
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const query = filter.trim().toLowerCase();
-  const rows = query
-    ? demoItems.filter((item) => item.name.toLowerCase().includes(query))
-    : demoItems;
+  const rows = query ? items.filter((item) => item.name.toLowerCase().includes(query)) : items;
+  const shown = rows.filter((item) => selected.includes(item.id)).length;
+  const allState = shown === 0 ? false : shown === rows.length ? true : "indeterminate";
+  const count = `${selected.length} item${selected.length === 1 ? "" : "s"}`;
 
   function toggle(id: string) {
     setSelected((ids) => (ids.includes(id) ? ids.filter((value) => value !== id) : [...ids, id]));
+  }
+
+  // Select-all works on the rows in view, and leaves a selection the filter hides alone.
+  function toggleAll(checked: boolean) {
+    const ids = rows.map((item) => item.id);
+    setSelected((current) =>
+      checked ? [...new Set([...current, ...ids])] : current.filter((id) => !ids.includes(id)),
+    );
   }
 
   return (
@@ -38,7 +49,7 @@ export function BlocksPage() {
       <PageHeader
         kicker="Furniture"
         title="Page blocks"
-        description="The list, detail and settings frames, so a new page starts from the same shape."
+        description="The furniture around a list: a filter bar, a selection toolbar and a confirm step, so a new list page starts from the same shape."
         actions={
           <Button icon={Plus} onClick={() => notify.created("Item")}>
             New item
@@ -76,14 +87,11 @@ export function BlocksPage() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-10">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     aria-label="Select all"
-                    className="size-4 accent-[var(--color-primary)]"
-                    checked={rows.length > 0 && rows.every((item) => selected.includes(item.id))}
-                    onChange={(event) =>
-                      setSelected(event.target.checked ? rows.map((item) => item.id) : [])
-                    }
+                    checked={allState}
+                    disabled={rows.length === 0}
+                    onCheckedChange={(checked) => toggleAll(checked === true)}
                   />
                 </TableHead>
                 <TableHead>Name</TableHead>
@@ -95,12 +103,10 @@ export function BlocksPage() {
               {rows.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       aria-label={`Select ${item.name}`}
-                      className="size-4 accent-[var(--color-primary)]"
                       checked={selected.includes(item.id)}
-                      onChange={() => toggle(item.id)}
+                      onCheckedChange={() => toggle(item.id)}
                     />
                   </TableCell>
                   <TableCell className="font-medium">{item.name}</TableCell>
@@ -116,10 +122,21 @@ export function BlocksPage() {
           </Table>
           {rows.length === 0 ? (
             <div className="grid place-items-center gap-2 px-4 py-12 text-center">
-              <p className="text-sm text-muted-foreground">Nothing matches “{filter}”.</p>
-              <Button size="sm" variant="secondary" onClick={() => setFilter("")}>
-                Clear the filter
-              </Button>
+              {items.length === 0 ? (
+                <>
+                  <p className="text-sm text-muted-foreground">No items left.</p>
+                  <Button size="sm" variant="secondary" onClick={() => setItems(demoItems)}>
+                    Bring them back
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-muted-foreground">Nothing matches “{filter}”.</p>
+                  <Button size="sm" variant="secondary" onClick={() => setFilter("")}>
+                    Clear the filter
+                  </Button>
+                </>
+              )}
             </div>
           ) : null}
         </div>
@@ -127,13 +144,14 @@ export function BlocksPage() {
 
       <ConfirmDialog
         open={confirmOpen}
-        title={`Delete ${selected.length} item${selected.length === 1 ? "" : "s"}?`}
+        title={`Delete ${count}?`}
         description="They and their history are removed. This cannot be undone."
         confirmLabel="Delete"
         destructive
         onOpenChange={setConfirmOpen}
         onConfirm={() => {
-          notify.deleted(`${selected.length} items`);
+          setItems((current) => current.filter((item) => !selected.includes(item.id)));
+          notify.deleted(count);
           setSelected([]);
           setConfirmOpen(false);
         }}

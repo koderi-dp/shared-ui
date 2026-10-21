@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { CircleUser, LogOut, Settings, User } from "lucide-react";
 import { headerChipClass } from "@/ui/layout/nav";
 import { notify } from "@/ui/notify";
@@ -23,6 +24,7 @@ export function HeaderStatus({ state = "running", label = "All services up" }) {
 }
 
 export function UserMenu() {
+  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,7 +43,7 @@ export function UserMenu() {
           <User className="size-4" />
           Profile
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => notify.success("Settings opened")}>
+        <DropdownMenuItem onSelect={() => navigate({ to: "/settings" })}>
           <Settings className="size-4" />
           Settings
         </DropdownMenuItem>

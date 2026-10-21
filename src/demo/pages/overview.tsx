@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Plus, RefreshCw, Rows3, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Sparkline, StateTimeline, TimeChart } from "@/ui/charts";
@@ -21,8 +22,15 @@ import {
 } from "@/ui/primitives/table";
 import { StatusBadge } from "@/ui/status";
 import { usePersisted } from "@/ui/use-persisted";
-import { formatBytes, formatDuration } from "@/ui/utils";
-import { chartRows, demoItems, demoStates, TIMELINE_STEP_MS, timelineRows } from "../data";
+import { cn, formatBytes, formatDuration } from "@/ui/utils";
+import {
+  chartRows,
+  type DemoItem,
+  demoItems,
+  demoStates,
+  TIMELINE_STEP_MS,
+  timelineRows,
+} from "../data";
 
 const TIMELINE_ROWS = timelineRows();
 const SERIES = [
@@ -36,7 +44,12 @@ export function OverviewPage() {
   const [now] = useState(() => Date.now());
   const [filter, setFilter] = useState("");
   const [dense, setDense] = usePersisted("showcase.denseRows", false);
-  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const [items, setItems] = useState(demoItems);
+  // Kept after the dialog closes, so its title does not change while it fades out.
+  const [pendingDelete, setPendingDelete] = useState<DemoItem | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  // The cell's own padding sets the row height, so dense trims it as well as the height.
+  const cell = dense ? "h-8 py-1" : undefined;
 
   const commands = useMemo(
     () => [
@@ -63,14 +76,14 @@ export function OverviewPage() {
 
   const query = filter.trim().toLowerCase();
   const rows = query
-    ? demoItems.filter((item) =>
+    ? items.filter((item) =>
         [item.name, item.owner, item.state].some((field) => field.toLowerCase().includes(query)),
       )
-    : demoItems;
+    : items;
 
   const from = now - TIMELINE_ROWS[0].states.length * TIMELINE_STEP_MS;
-  const running = demoItems.filter((item) => item.state === "running").length;
-  const stored = demoItems.reduce((total, item) => total + item.bytes, 0);
+  const running = items.filter((item) => item.state === "running").length;
+  const stored = items.reduce((total, item) => total + item.bytes, 0);
 
   return (
     <PageShell gap="loose">
@@ -100,7 +113,7 @@ export function OverviewPage() {
             <CardTitle className="text-muted-foreground">Items</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-medium tabular-nums">{demoItems.length}</p>
+            <p className="text-2xl font-medium tabular-nums">{items.length}</p>
           </CardContent>
         </Card>
         <Card>
@@ -110,7 +123,7 @@ export function OverviewPage() {
           <CardContent>
             <p className="text-2xl font-medium tabular-nums">
               {running}
-              <span className="text-base text-muted-foreground">/{demoItems.length}</span>
+              <span className="text-base text-muted-foreground">/{items.length}</span>
             </p>
           </CardContent>
         </Card>
@@ -164,32 +177,41 @@ export function OverviewPage() {
             <TableBody>
               {rows.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className={dense ? "h-8" : undefined}>
-                    <span className="font-medium">{item.name}</span>
+                  <TableCell className={cell}>
+                    <Link
+                      to="/detail/$id"
+                      params={{ id: item.id }}
+                      className="font-medium hover:underline"
+                    >
+                      {item.name}
+                    </Link>
                     <span className="ml-2 font-mono text-[11px] text-muted-foreground">
                       {item.id}
                     </span>
                   </TableCell>
-                  <TableCell className={dense ? "h-8" : undefined}>{item.owner}</TableCell>
-                  <TableCell className={dense ? "h-8" : undefined}>
+                  <TableCell className={cell}>{item.owner}</TableCell>
+                  <TableCell className={cell}>
                     <StatusBadge state={item.state} />
                   </TableCell>
-                  <TableCell className={`text-right tabular-nums ${dense ? "h-8" : ""}`}>
+                  <TableCell className={cn("text-right tabular-nums", cell)}>
                     {formatBytes(item.bytes)}
                   </TableCell>
-                  <TableCell className={`text-right tabular-nums ${dense ? "h-8" : ""}`}>
+                  <TableCell className={cn("text-right tabular-nums", cell)}>
                     {item.uptimeMs ? formatDuration(item.uptimeMs) : "—"}
                   </TableCell>
-                  <TableCell className={dense ? "h-8" : undefined}>
+                  <TableCell className={cell}>
                     <Sparkline values={item.history} label={`${item.name} throughput, last hour`} />
                   </TableCell>
-                  <TableCell className={dense ? "h-8" : undefined}>
+                  <TableCell className={cell}>
                     <Button
                       size="icon-sm"
                       variant="ghost"
                       aria-label={`Delete ${item.name}`}
                       title={`Delete ${item.name}`}
-                      onClick={() => setPendingDelete(item.name)}
+                      onClick={() => {
+                        setPendingDelete(item);
+                        setConfirmOpen(true);
+                      }}
                     >
                       <Trash2 />
                     </Button>
@@ -200,7 +222,7 @@ export function OverviewPage() {
           </Table>
           {rows.length === 0 ? (
             <p className="px-4 py-8 text-center text-sm text-muted-foreground">
-              Nothing matches “{filter}”.
+              {items.length === 0 ? "No items left." : `Nothing matches “${filter}”.`}
             </p>
           ) : null}
         </div>
@@ -229,17 +251,17 @@ export function OverviewPage() {
       </div>
 
       <ConfirmDialog
-        open={pendingDelete !== null}
-        title={`Delete ${pendingDelete ?? "item"}?`}
+        open={confirmOpen}
+        title={`Delete ${pendingDelete?.name ?? "item"}?`}
         description="The item and its history are removed. This cannot be undone."
         confirmLabel="Delete"
         destructive
-        onOpenChange={(open) => {
-          if (!open) setPendingDelete(null);
-        }}
+        onOpenChange={setConfirmOpen}
         onConfirm={() => {
-          notify.deleted(pendingDelete ?? "Item");
-          setPendingDelete(null);
+          if (!pendingDelete) return;
+          setItems((current) => current.filter((item) => item.id !== pendingDelete.id));
+          notify.deleted(pendingDelete.name);
+          setConfirmOpen(false);
         }}
       />
     </PageShell>

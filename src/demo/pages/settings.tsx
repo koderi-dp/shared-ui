@@ -78,7 +78,7 @@ export function SettingsPage() {
         >
           {section === "general" ? (
             <div className="grid gap-4">
-              <Field label="Name" hint="Used in the window title and the palette.">
+              <Field label="Name" hint="What the app calls itself.">
                 <Input
                   value={form.name}
                   onChange={(event) => set("name", event.target.value)}
