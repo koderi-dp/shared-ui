@@ -263,6 +263,36 @@
       ]
     },
     {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Radix popover on the elevated surface, for small lists and menus anchored to a trigger.",
+      "dependencies": ["@radix-ui/react-popover@^1.3.1"],
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/popover.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/popover.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Radix checkbox with the checked and indeterminate states.",
+      "dependencies": ["@radix-ui/react-checkbox@^1.4.1"],
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/checkbox.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/checkbox.tsx"
+        }
+      ]
+    },
+    {
       "name": "separator",
       "type": "registry:ui",
       "title": "Separator",
@@ -599,6 +629,123 @@
       ]
     },
     {
+      "name": "data-grid",
+      "type": "registry:component",
+      "title": "Data grid",
+      "description": "One table component on TanStack Table: column widths remembered per grid in localStorage, pinned, sortable and breakpoint-hidden columns, row selection, mobile cards and the progress, status and tags column types, plus KeyValueTable for record layouts.",
+      "dependencies": ["@tanstack/react-table@^9.3.1", "lucide-react@^0.510.0"],
+      "devDependencies": ["vitest@^4.1.11"],
+      "registryDependencies": [
+        "@koderi/theme",
+        "@koderi/utils",
+        "@koderi/badge",
+        "@koderi/popover",
+        "@koderi/checkbox"
+      ],
+      "files": [
+        {
+          "path": "src/ui/data-grid/types.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/types.ts"
+        },
+        {
+          "path": "src/ui/data-grid/data-grid.tsx",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/data-grid.tsx"
+        },
+        {
+          "path": "src/ui/data-grid/index.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/index.ts"
+        },
+        {
+          "path": "src/ui/data-grid/key-value-table.tsx",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/key-value-table.tsx"
+        },
+        {
+          "path": "src/ui/data-grid/resize-handle.tsx",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/resize-handle.tsx"
+        },
+        {
+          "path": "src/ui/data-grid/use-column-widths.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/use-column-widths.ts"
+        },
+        {
+          "path": "src/ui/data-grid/column-widths.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/column-widths.ts"
+        },
+        {
+          "path": "src/ui/data-grid/column-widths.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/column-widths.test.ts"
+        },
+        {
+          "path": "src/ui/data-grid/grid-layout.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/grid-layout.ts"
+        },
+        {
+          "path": "src/ui/data-grid/grid-layout.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/grid-layout.test.ts"
+        },
+        {
+          "path": "src/ui/data-grid/columns/column-factories.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/column-factories.ts"
+        },
+        {
+          "path": "src/ui/data-grid/columns/progress-column.tsx",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/progress-column.tsx"
+        },
+        {
+          "path": "src/ui/data-grid/columns/progress-level.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/progress-level.ts"
+        },
+        {
+          "path": "src/ui/data-grid/columns/progress-level.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/progress-level.test.ts"
+        },
+        {
+          "path": "src/ui/data-grid/columns/status-column.tsx",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/status-column.tsx"
+        },
+        {
+          "path": "src/ui/data-grid/columns/tags-column.tsx",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/tags-column.tsx"
+        },
+        {
+          "path": "src/ui/data-grid/columns/chip-fit.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/chip-fit.ts"
+        },
+        {
+          "path": "src/ui/data-grid/columns/chip-fit.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/chip-fit.test.ts"
+        },
+        {
+          "path": "src/ui/data-grid/columns/tones.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/tones.ts"
+        },
+        {
+          "path": "src/ui/data-grid/columns/tones.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/data-grid/columns/tones.test.ts"
+        }
+      ]
+    },
+    {
       "name": "app-shell",
       "type": "registry:component",
       "title": "App shell",
@@ -643,6 +790,8 @@
         "@koderi/select",
         "@koderi/label",
         "@koderi/switch",
+        "@koderi/popover",
+        "@koderi/checkbox",
         "@koderi/separator",
         "@koderi/scroll-area",
         "@koderi/skeleton",
@@ -661,6 +810,7 @@
         "@koderi/nav",
         "@koderi/command-palette",
         "@koderi/tree",
+        "@koderi/data-grid",
         "@koderi/app-shell"
       ]
     }

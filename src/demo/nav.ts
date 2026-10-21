@@ -1,4 +1,12 @@
-import { Activity, Boxes, FileText, FolderTree, LayoutPanelLeft, Settings } from "lucide-react";
+import {
+  Activity,
+  Boxes,
+  FileText,
+  FolderTree,
+  LayoutPanelLeft,
+  Settings,
+  Table2,
+} from "lucide-react";
 import type { Brand } from "@/ui/layout/app-shell";
 import type { NavConfig } from "@/ui/layout/nav";
 
@@ -9,6 +17,7 @@ export const demoNav: NavConfig = {
     { to: "/primitives", label: "Primitives", icon: Boxes, keywords: ["components", "atoms"] },
     { to: "/blocks", label: "Page blocks", icon: FileText, keywords: ["furniture", "list"] },
     { to: "/tree", label: "Tree", icon: FolderTree, keywords: ["hierarchy", "folders", "files"] },
+    { to: "/data-grid", label: "Data grid", icon: Table2, keywords: ["table", "columns"] },
     { to: "/charts", label: "Charts", icon: LayoutPanelLeft, keywords: ["metrics", "timeline"] },
     { to: "/detail/atlas", label: "Detail", icon: FileText, keywords: ["record", "item"] },
   ],

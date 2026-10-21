@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BlocksPage } from "./demo/pages/blocks";
 import { ChartsPage } from "./demo/pages/charts";
+import { DataGridPage } from "./demo/pages/data-grid";
 import { DetailPage } from "./demo/pages/detail";
 import { OverviewPage } from "./demo/pages/overview";
 import { PrimitivesPage } from "./demo/pages/primitives";
@@ -40,6 +41,11 @@ const treeRoute = createRoute({
   path: "/tree",
   component: TreePage,
 });
+const dataGridRoute = createRoute({
+  getParentRoute: () => shellRoute,
+  path: "/data-grid",
+  component: DataGridPage,
+});
 const chartsRoute = createRoute({
   getParentRoute: () => shellRoute,
   path: "/charts",
@@ -62,6 +68,7 @@ const routeTree = rootRoute.addChildren([
     primitivesRoute,
     blocksRoute,
     treeRoute,
+    dataGridRoute,
     chartsRoute,
     detailRoute,
     settingsRoute,
