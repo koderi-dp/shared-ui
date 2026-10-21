@@ -1,5 +1,7 @@
 # shared-ui
 
+[![The showcase's overview page: the app shell, metric cards, a status table and charts](.github/assets/showcase.png)](https://koderi-dp.github.io/shared-ui/)
+
 The shared UI for the koderi starters, published as a shadcn registry. It is the source of
 truth for the look of `redix-ui-starter` (a Vite SPA) and `tanstack-app-starter` (TanStack
 Start), and it ships with a showcase app that renders every item on one set of pages.
