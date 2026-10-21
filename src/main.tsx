@@ -75,7 +75,8 @@ const routeTree = rootRoute.addChildren([
   ]),
 ]);
 
-const router = createRouter({ routeTree });
+// BASE_URL is "/" locally and "/shared-ui/" on GitHub Pages (see vite.config.ts).
+const router = createRouter({ routeTree, basepath: import.meta.env.BASE_URL });
 
 declare module "@tanstack/react-router" {
   interface Register {

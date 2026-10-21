@@ -5,6 +5,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // The showcase: every registry item on one set of pages, to check them in a browser.
 export default defineConfig({
+  // The Pages workflow sets BASE_PATH to "/shared-ui/", the repo's subpath on github.io.
+  base: process.env.BASE_PATH ?? "/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
