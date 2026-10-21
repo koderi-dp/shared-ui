@@ -9,7 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { clockTime } from "@/ui/chart-format";
+import { clockTime, timeTicks } from "@/ui/chart-format";
 import { cn } from "@/ui/utils";
 
 const AXIS = "#8b909c";
@@ -103,7 +103,7 @@ export function TimeChart({
     return null;
   };
   const hasData = rows.some((row) => series.some((item) => row[item.id] != null));
-  const span = to - from;
+  const axis = timeTicks(from, to);
 
   return (
     <section
@@ -159,7 +159,8 @@ export function TimeChart({
           </div>
         ) : (
           <ResponsiveContainer className="absolute inset-0" width="100%" height="100%">
-            <LineChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+            {/* The right margin leaves room for half a time label at the last tick. */}
+            <LineChart data={rows} margin={{ top: 8, right: 20, left: 0, bottom: 0 }}>
               <CartesianGrid stroke={GRID} vertical={false} />
               <XAxis
                 dataKey="t"
@@ -169,8 +170,9 @@ export function TimeChart({
                 tick={{ fill: AXIS, fontSize: 11 }}
                 tickLine={false}
                 axisLine={{ stroke: GRID }}
-                tickFormatter={(value: number) => clockTime(value, span <= 15 * 60_000)}
-                minTickGap={48}
+                ticks={axis.ticks}
+                tickFormatter={(value: number) => clockTime(value, axis.withSeconds)}
+                minTickGap={24}
               />
               <YAxis
                 domain={[0, "auto"]}

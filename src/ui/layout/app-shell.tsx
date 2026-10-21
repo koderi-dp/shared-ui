@@ -42,6 +42,8 @@ function NavList({
             to={item.to}
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
+            // Collapsed, the label is only in the tooltip, which does not name the link.
+            aria-label={collapsed ? item.label : undefined}
             className={cn(
               "flex h-9 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium text-muted-foreground transition-[background-color,color] duration-150 hover:bg-secondary hover:text-foreground",
               active && "bg-secondary text-foreground",
@@ -106,7 +108,12 @@ function SidebarBody({
           collapsed ? "justify-center px-2" : "px-3",
         )}
       >
-        <Link to="/" onClick={onNavigate} title={brand.name}>
+        <Link
+          to="/"
+          onClick={onNavigate}
+          title={brand.name}
+          aria-label={collapsed ? brand.name : undefined}
+        >
           <Wordmark brand={brand} compact={collapsed} />
         </Link>
       </div>

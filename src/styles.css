@@ -66,6 +66,9 @@
 @layer base {
   * {
     @apply border-border;
+    /* Thin, quiet scrollbars, so a wide table's own bar matches the dark surfaces. */
+    scrollbar-width: thin;
+    scrollbar-color: rgb(236 238 242 / 16%) transparent;
   }
 
   html {

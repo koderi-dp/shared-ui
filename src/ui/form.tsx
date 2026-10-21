@@ -1,5 +1,5 @@
 import { ChevronRight } from "lucide-react";
-import { useEffect, useId, useState, type ReactNode } from "react";
+import { cloneElement, isValidElement, useEffect, useId, useState, type ReactNode } from "react";
 import { Input } from "@/ui/primitives/input";
 import { cn } from "@/ui/utils";
 
@@ -17,20 +17,32 @@ export function Field({
   className?: string;
   children: ReactNode;
 }) {
+  const messageId = useId();
+  // The control is marked invalid and pointed at the message, so the error is more than red text.
+  const control = isValidElement<ControlAria>(children)
+    ? cloneElement(children, {
+        "aria-invalid": error ? true : children.props["aria-invalid"],
+        "aria-describedby": error || hint ? messageId : children.props["aria-describedby"],
+      })
+    : children;
   return (
     <label className={cn("grid content-start gap-1.5", className)}>
       <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      {children}
+      {control}
       {error ? (
-        <span role="alert" className="text-xs text-danger-fg">
+        <span id={messageId} role="alert" className="text-xs text-danger-fg">
           {error}
         </span>
       ) : hint ? (
-        <span className="text-xs text-muted-foreground">{hint}</span>
+        <span id={messageId} className="text-xs text-muted-foreground">
+          {hint}
+        </span>
       ) : null}
     </label>
   );
 }
+
+type ControlAria = { "aria-invalid"?: boolean; "aria-describedby"?: string };
 
 /**
  * Whole-number input. Keeps the typed text while it is being edited so the field
@@ -44,6 +56,8 @@ export function NumberInput({
   disabled,
   className,
   "aria-label": ariaLabel,
+  "aria-invalid": ariaInvalid,
+  "aria-describedby": ariaDescribedBy,
 }: {
   value: number;
   onChange: (value: number) => void;
@@ -52,7 +66,7 @@ export function NumberInput({
   disabled?: boolean;
   className?: string;
   "aria-label"?: string;
-}) {
+} & ControlAria) {
   const [text, setText] = useState(String(value));
   useEffect(() => {
     setText((current) => (Number(current) === value && current !== "" ? current : String(value)));
@@ -61,6 +75,8 @@ export function NumberInput({
     <Input
       inputMode="numeric"
       aria-label={ariaLabel}
+      aria-invalid={ariaInvalid}
+      aria-describedby={ariaDescribedBy}
       disabled={disabled}
       className={cn("tabular-nums", className)}
       value={text}
