@@ -13,6 +13,7 @@
     "@koderi/dialog",
     "@koderi/sheet",
     "@koderi/dropdown-menu",
+    "@koderi/context-menu",
     "@koderi/tabs",
     "@koderi/tooltip",
     "@koderi/input",

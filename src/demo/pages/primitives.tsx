@@ -21,6 +21,13 @@ import { Badge } from "@/ui/primitives/badge";
 import { Button, IconButton } from "@/ui/primitives/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/primitives/card";
 import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/ui/primitives/context-menu";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -240,7 +247,7 @@ export function PrimitivesPage() {
           </div>
         </Section>
 
-        <Section title="Overlays" description="Dialog, sheet, dropdown and tooltip.">
+        <Section title="Overlays" description="Dialog, sheet, dropdown, context menu and tooltip.">
           <div className="flex flex-wrap items-center gap-2">
             <Button variant="secondary" onClick={() => setDialogOpen(true)}>
               Open dialog
@@ -272,6 +279,28 @@ export function PrimitivesPage() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <ContextMenu>
+              <ContextMenuTrigger asChild>
+                <span className="inline-flex h-9 cursor-context-menu items-center rounded-md border border-dashed border-border px-3 text-sm text-muted-foreground select-none">
+                  Right-click me
+                </span>
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem onSelect={() => notify.success("Renamed")}>
+                  <FileText className="size-4" />
+                  Rename
+                </ContextMenuItem>
+                <ContextMenuItem onSelect={() => notify.success("Moved")}>
+                  <Layers className="size-4" />
+                  Move to…
+                </ContextMenuItem>
+                <ContextMenuSeparator />
+                <ContextMenuItem onSelect={() => notify.deleted("Item")}>
+                  <Trash2 className="size-4" />
+                  Delete
+                </ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="outline">Hover me</Button>

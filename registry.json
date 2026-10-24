@@ -161,6 +161,21 @@
       ]
     },
     {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "title": "Context menu",
+      "description": "Radix menu opened by a right click, a long press, the Menu key or Shift+F10, drawn like the dropdown menu.",
+      "dependencies": ["@radix-ui/react-context-menu@^2.4.1"],
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/context-menu.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/context-menu.tsx"
+        }
+      ]
+    },
+    {
       "name": "tabs",
       "type": "registry:ui",
       "title": "Tabs",
@@ -532,13 +547,19 @@
       "name": "use-persisted",
       "type": "registry:hook",
       "title": "usePersisted",
-      "description": "localStorage state that survives a reload and hydrates without a mismatch on a server render.",
+      "description": "localStorage state that survives a reload and hydrates without a mismatch on a server render, with a validator that refuses a stored value the current code cannot use.",
+      "devDependencies": ["vitest@^4.1.11"],
       "registryDependencies": [],
       "files": [
         {
           "path": "src/ui/use-persisted.ts",
           "type": "registry:file",
           "target": "src/ui/use-persisted.ts"
+        },
+        {
+          "path": "src/ui/use-persisted.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/use-persisted.test.ts"
         }
       ]
     },
@@ -793,6 +814,7 @@
         "@koderi/dialog",
         "@koderi/sheet",
         "@koderi/dropdown-menu",
+        "@koderi/context-menu",
         "@koderi/tabs",
         "@koderi/tooltip",
         "@koderi/input",
