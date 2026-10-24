@@ -119,7 +119,7 @@
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
-      "description": "Radix dialog with the shared overlay, close button and header parts.",
+      "description": "Radix dialog with the shared overlay, close button and header parts. DialogContent's form flag keeps a form open on a click outside.",
       "dependencies": ["@radix-ui/react-dialog@^1.1.15", "lucide-react@^0.510.0"],
       "registryDependencies": ["@koderi/utils"],
       "files": [

@@ -282,10 +282,13 @@ export function PrimitivesPage() {
             </Tooltip>
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogContent>
+            <DialogContent form>
               <DialogHeader>
                 <DialogTitle>Rename item</DialogTitle>
-                <DialogDescription>The name is used everywhere the item appears.</DialogDescription>
+                <DialogDescription>
+                  The name is used everywhere the item appears. A form dialog stays open on a click
+                  outside; Escape, Cancel or × closes it.
+                </DialogDescription>
               </DialogHeader>
               <Field label="Name">
                 <Input defaultValue="Nightly ingest" />
