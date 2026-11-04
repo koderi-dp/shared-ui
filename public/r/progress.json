@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "progress",
+  "title": "Progress",
+  "description": "Radix progress, with indicatorClassName for a level colour and children for a label on top.",
+  "dependencies": [
+    "@radix-ui/react-progress@^1.2.1"
+  ],
+  "registryDependencies": [
+    "@koderi/utils"
+  ],
+  "files": [
+    {
+      "path": "src/ui/primitives/progress.tsx",
+      "content": "import type * as React from \"react\";\nimport * as ProgressPrimitive from \"@radix-ui/react-progress\";\nimport { cn } from \"@/ui/utils\";\n\nfunction Progress({\n  className,\n  indicatorClassName,\n  value,\n  children,\n  ...props\n}: React.ComponentProps<typeof ProgressPrimitive.Root> & {\n  /** Classes for the filled part, such as a colour that follows the level. */\n  indicatorClassName?: string;\n}) {\n  return (\n    <ProgressPrimitive.Root\n      data-slot=\"progress\"\n      value={value}\n      className={cn(\"relative h-2 w-full overflow-hidden rounded-full bg-secondary\", className)}\n      {...props}\n    >\n      <ProgressPrimitive.Indicator\n        data-slot=\"progress-indicator\"\n        className={cn(\"h-full w-full flex-1 bg-primary transition-transform\", indicatorClassName)}\n        style={{ transform: `translateX(-${100 - Math.min(100, Math.max(0, value ?? 0))}%)` }}\n      />\n      {children}\n    </ProgressPrimitive.Root>\n  );\n}\n\nexport { Progress };\n",
+      "type": "registry:file",
+      "target": "src/ui/primitives/progress.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-mobile",
+  "title": "useIsMobile",
+  "description": "Whether the viewport is narrower than the md breakpoint, as the sidebar uses it.",
+  "devDependencies": [
+    "vitest@^4.1.11"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/ui/use-mobile.ts",
+      "content": "import { useEffect, useState } from \"react\";\n\n/** Below this width the sidebar is a sheet and the layout is the phone one (Tailwind's `md`). */\nexport const MOBILE_BREAKPOINT = 768;\n\nexport function isMobileWidth(width: number, breakpoint = MOBILE_BREAKPOINT): boolean {\n  return width < breakpoint;\n}\n\n/** Whether the viewport is narrower than `MOBILE_BREAKPOINT`. False until mounted. */\nexport function useIsMobile(breakpoint = MOBILE_BREAKPOINT): boolean {\n  const [isMobile, setIsMobile] = useState(false);\n  useEffect(() => {\n    const query = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);\n    const onChange = () => setIsMobile(isMobileWidth(window.innerWidth, breakpoint));\n    query.addEventListener(\"change\", onChange);\n    onChange();\n    return () => query.removeEventListener(\"change\", onChange);\n  }, [breakpoint]);\n  return isMobile;\n}\n",
+      "type": "registry:file",
+      "target": "src/ui/use-mobile.ts"
+    },
+    {
+      "path": "src/ui/use-mobile.test.ts",
+      "content": "import { describe, expect, it } from \"vitest\";\nimport { isMobileWidth, MOBILE_BREAKPOINT } from \"./use-mobile\";\n\ndescribe(\"isMobileWidth\", () => {\n  it(\"is mobile below the breakpoint and desktop from it\", () => {\n    expect(isMobileWidth(MOBILE_BREAKPOINT - 1)).toBe(true);\n    expect(isMobileWidth(MOBILE_BREAKPOINT)).toBe(false);\n  });\n\n  it(\"takes another breakpoint\", () => {\n    expect(isMobileWidth(1000, 1024)).toBe(true);\n    expect(isMobileWidth(1024, 1024)).toBe(false);\n  });\n});\n",
+      "type": "registry:file",
+      "target": "src/ui/use-mobile.test.ts"
+    }
+  ],
+  "type": "registry:hook"
+}

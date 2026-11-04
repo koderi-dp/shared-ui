@@ -33,7 +33,16 @@ import {
 import { ResizeHandle } from "@/ui/data-grid/resize-handle";
 import type { DataGridColumn, DataGridProps } from "@/ui/data-grid/types";
 import { useColumnWidths } from "@/ui/data-grid/use-column-widths";
+import { Button } from "@/ui/primitives/button";
 import { Checkbox } from "@/ui/primitives/checkbox";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/ui/primitives/table";
 import { cn } from "@/ui/utils";
 
 const DEFAULT_MIN = 48;
@@ -300,9 +309,13 @@ export function DataGrid<T extends RowData>({
     if (event.shiftKey) event.preventDefault();
   };
 
-  const tableEl = (
-    <table
-      className={classNames?.table}
+  // Only scroll in a container when something needs one; otherwise the container is
+  // `display: contents`, so the table renders as if bare and a sticky header sticks to the page.
+  const needsWrapper = !!className || fixed || pinnedIds.length > 0;
+  return (
+    <Table
+      containerClassName={needsWrapper ? className : "contents"}
+      className={cn("w-auto text-[length:inherit]", classNames?.table)}
       style={fixed ? { width: totalWidth, tableLayout: "fixed" } : undefined}
     >
       {fixed ? (
@@ -312,8 +325,8 @@ export function DataGrid<T extends RowData>({
           ))}
         </colgroup>
       ) : null}
-      <thead className={classNames?.thead}>
-        <tr className={classNames?.headerRow}>
+      <TableHeader className={cn("text-[length:inherit] text-inherit", classNames?.thead)}>
+        <TableRow className={classNames?.headerRow}>
           {headers.map((h) => {
             const col = byId.get(h.column.id);
             if (!col) return null;
@@ -324,11 +337,11 @@ export function DataGrid<T extends RowData>({
             const showHandle = canResize && h.column.getCanResize();
             if (id === SELECT_COLUMN_ID && selection) {
               return (
-                <th
+                <TableHead
                   key={h.id}
                   style={pinnedStyle(id)}
                   className={cn(
-                    "relative",
+                    "relative p-0",
                     (stickyHeader || pinned) && "bg-background",
                     stickyHeader && "sticky top-0 z-20",
                     pinned && "sticky z-30",
@@ -352,11 +365,11 @@ export function DataGrid<T extends RowData>({
                     }
                     className="align-middle"
                   />
-                </th>
+                </TableHead>
               );
             }
             return (
-              <th
+              <TableHead
                 key={h.id}
                 style={pinnedStyle(id)}
                 aria-sort={
@@ -369,7 +382,7 @@ export function DataGrid<T extends RowData>({
                     : undefined
                 }
                 className={cn(
-                  "relative",
+                  "relative p-0",
                   col.align === "right" && "text-right",
                   showHandle && "group/header",
                   (stickyHeader || pinned) && "bg-background",
@@ -381,11 +394,13 @@ export function DataGrid<T extends RowData>({
                 )}
               >
                 {sortable ? (
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={h.column.getToggleSortingHandler()}
                     className={cn(
-                      "inline-flex cursor-pointer items-center gap-1 hover:text-foreground",
+                      "-mx-1.5 h-auto gap-1 px-1.5 py-0.5 text-[length:inherit] [font-weight:inherit] [letter-spacing:inherit] text-inherit hover:bg-secondary/60 hover:text-foreground [&_svg]:size-3",
                       col.align === "right" && "flex-row-reverse",
                     )}
                   >
@@ -395,7 +410,7 @@ export function DataGrid<T extends RowData>({
                     ) : sorted === "desc" ? (
                       <ArrowDown className="size-3" aria-hidden />
                     ) : null}
-                  </button>
+                  </Button>
                 ) : (
                   renderHeader(col)
                 )}
@@ -410,12 +425,12 @@ export function DataGrid<T extends RowData>({
                     onReset={() => reset(id)}
                   />
                 ) : null}
-              </th>
+              </TableHead>
             );
           })}
-        </tr>
-      </thead>
-      <tbody>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {sortedRows.map((row) => {
           const rowClass =
             typeof classNames?.row === "function" ? classNames.row(row.original) : classNames?.row;
@@ -425,9 +440,10 @@ export function DataGrid<T extends RowData>({
           // so toggling the detail never remounts the record row.
           return (
             <Fragment key={row.id}>
-              <tr
-                className={cn(rowClass, onRowClick && "group cursor-pointer hover:bg-secondary/40")}
+              <TableRow
+                className={cn(rowClass, onRowClick && "cursor-pointer hover:bg-secondary/40")}
                 data-selected={isSelected ? "true" : undefined}
+                data-state={isSelected ? "selected" : undefined}
                 onClick={onRowClick ? onRowClickCapture(row.original) : undefined}
                 onDoubleClick={onRowDoubleClick ? onRowDoubleClickCapture(row.original) : undefined}
                 onContextMenu={
@@ -447,7 +463,7 @@ export function DataGrid<T extends RowData>({
                   const isSelectCell = col.id === SELECT_COLUMN_ID && !!selection;
                   const extra = col.cellProps?.(row.original);
                   return (
-                    <td
+                    <TableCell
                       key={cell.id}
                       style={pinnedStyle(col.id)}
                       title={extra?.title}
@@ -460,6 +476,7 @@ export function DataGrid<T extends RowData>({
                               col.id === lastPinned && "shadow-[4px_0_6px_-4px_rgb(0_0_0/0.6)]",
                             )
                           : "isolate",
+                        "h-auto p-0",
                         classNames?.cell,
                         col.className,
                         extra?.className,
@@ -482,33 +499,31 @@ export function DataGrid<T extends RowData>({
                       ) : (
                         col.cell(row.original)
                       )}
-                    </td>
+                    </TableCell>
                   );
                 })}
-              </tr>
+              </TableRow>
               {detail != null ? (
-                <tr className={classNames?.detailRow}>
-                  <td colSpan={headers.length} className={classNames?.detailCell}>
+                <TableRow className={cn("hover:bg-transparent", classNames?.detailRow)}>
+                  <TableCell
+                    colSpan={headers.length}
+                    className={cn("h-auto p-0", classNames?.detailCell)}
+                  >
                     {detail}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : null}
             </Fragment>
           );
         })}
         {rows.length === 0 && empty !== undefined && emptyInTable ? (
-          <tr className={classNames?.emptyRow}>
-            <td colSpan={headers.length} className={classNames?.emptyCell}>
+          <TableRow className={cn("hover:bg-transparent", classNames?.emptyRow)}>
+            <TableCell colSpan={headers.length} className={cn("h-auto p-0", classNames?.emptyCell)}>
               {empty}
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         ) : null}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
-
-  // Only add a scroll container when something needs one; a plain auto-layout
-  // table with no className renders bare, exactly like today's tables.
-  const needsWrapper = !!className || fixed || pinnedIds.length > 0;
-  return needsWrapper ? <div className={cn("overflow-x-auto", className)}>{tableEl}</div> : tableEl;
 }

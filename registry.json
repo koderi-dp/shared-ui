@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:file",
       "title": "Theme",
-      "description": "The dark tokens: IBM Plex, the surface and signal colours, radii, shadows and easings, plus the base layer, toast styles and pulse keyframes.",
+      "description": "The dark tokens: IBM Plex, the surface, signal and sidebar colours, radii, shadows and easings, plus the base layer, toast styles and pulse keyframes.",
       "dependencies": [
         "tw-animate-css@^1.4.0",
         "sonner@^2.0.7",
@@ -90,8 +90,8 @@
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
-      "description": "Pill with default, outline, live, warn, danger and solid variants.",
-      "dependencies": ["class-variance-authority@^0.7.1"],
+      "description": "Pill with default, outline, live, warn, danger and solid variants, and asChild to draw it on a button or link.",
+      "dependencies": ["@radix-ui/react-slot@^1.4.0", "class-variance-authority@^0.7.1"],
       "registryDependencies": ["@koderi/utils"],
       "files": [
         {
@@ -119,7 +119,7 @@
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
-      "description": "Radix dialog with the shared overlay, close button and header parts. DialogContent's form flag keeps a form open on a click outside.",
+      "description": "Radix dialog with the shared overlay, close button and header parts. DialogContent's form flag keeps a form open on a click outside; showCloseButton drops the corner close.",
       "dependencies": ["@radix-ui/react-dialog@^1.1.15", "lucide-react@^0.510.0"],
       "registryDependencies": ["@koderi/utils"],
       "files": [
@@ -237,7 +237,7 @@
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
-      "description": "A native select, so it needs no portal, with the chevron drawn as a background.",
+      "description": "shadcn's Radix select: trigger, content, items, groups and labels, on the inset field surface. Use native-select where a portal does not fit.",
       "registryDependencies": ["@koderi/utils", "@koderi/field-control"],
       "files": [
         {
@@ -245,7 +245,8 @@
           "type": "registry:file",
           "target": "src/ui/primitives/select.tsx"
         }
-      ]
+      ],
+      "dependencies": ["@radix-ui/react-select@^2.4.1", "lucide-react@^0.510.0"]
     },
     {
       "name": "label",
@@ -355,7 +356,7 @@
       "name": "table",
       "type": "registry:ui",
       "title": "Table",
-      "description": "A dense table that scrolls sideways instead of squeezing its columns.",
+      "description": "Table, header, body, footer, row, head, cell and caption. The container scrolls sideways instead of squeezing columns.",
       "registryDependencies": ["@koderi/utils"],
       "files": [
         {
@@ -366,12 +367,254 @@
       ]
     },
     {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "Alert dialog",
+      "description": "Radix alert dialog: a click outside does not dismiss it. Action and Cancel are drawn with the button variants.",
+      "dependencies": ["@radix-ui/react-alert-dialog@^1.2.1", "class-variance-authority@^0.7.1"],
+      "registryDependencies": ["@koderi/utils", "@koderi/button"],
+      "files": [
+        {
+          "path": "src/ui/primitives/alert-dialog.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/alert-dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "description": "Radix collapsible: a trigger that shows and hides its content.",
+      "dependencies": ["@radix-ui/react-collapsible@^1.2.1"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/ui/primitives/collapsible.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/collapsible.tsx"
+        }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio group",
+      "description": "Radix radio group. An item with children is drawn as the whole card instead of a dot.",
+      "dependencies": ["@radix-ui/react-radio-group@^1.5.1", "lucide-react@^0.510.0"],
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/radio-group.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/radio-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "native-select",
+      "type": "registry:ui",
+      "title": "Native select",
+      "description": "A native select on the inset field surface, so it needs no portal, with the chevron as an icon.",
+      "dependencies": ["lucide-react@^0.510.0"],
+      "registryDependencies": ["@koderi/utils", "@koderi/field-control"],
+      "files": [
+        {
+          "path": "src/ui/primitives/native-select.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/native-select.tsx"
+        }
+      ]
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "title": "Command",
+      "description": "cmdk drawn as shadcn's Command, with CommandDialog for a palette.",
+      "dependencies": ["cmdk@^1.1.1", "lucide-react@^0.510.0"],
+      "registryDependencies": ["@koderi/utils", "@koderi/dialog"],
+      "files": [
+        {
+          "path": "src/ui/primitives/command.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/command.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "A keyboard key, and KbdGroup for a shortcut.",
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/kbd.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/kbd.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input group",
+      "description": "An input or textarea with addons, text and buttons inside the same field.",
+      "dependencies": ["class-variance-authority@^0.7.1"],
+      "registryDependencies": [
+        "@koderi/utils",
+        "@koderi/button",
+        "@koderi/input",
+        "@koderi/textarea"
+      ],
+      "files": [
+        {
+          "path": "src/ui/primitives/input-group.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/input-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "title": "Field",
+      "description": "Field, FieldLabel, FieldDescription, FieldError and the set, legend and group around them.",
+      "dependencies": ["class-variance-authority@^0.7.1"],
+      "registryDependencies": ["@koderi/utils", "@koderi/label", "@koderi/separator"],
+      "files": [
+        {
+          "path": "src/ui/primitives/field.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/field.tsx"
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "The empty state: media, title, description and content.",
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/empty.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/empty.tsx"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "Radix progress, with indicatorClassName for a level colour and children for a label on top.",
+      "dependencies": ["@radix-ui/react-progress@^1.2.1"],
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/progress.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/progress.tsx"
+        }
+      ]
+    },
+    {
+      "name": "chart",
+      "type": "registry:ui",
+      "title": "Chart",
+      "description": "shadcn's ChartContainer, tooltip and legend over recharts, themed from a ChartConfig.",
+      "dependencies": ["recharts@^3.10.1"],
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/chart.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sonner",
+      "type": "registry:ui",
+      "title": "Sonner",
+      "description": "shadcn's Sonner toaster on the theme's surfaces.",
+      "dependencies": ["sonner@^2.0.7", "lucide-react@^0.510.0"],
+      "registryDependencies": ["@koderi/utils"],
+      "files": [
+        {
+          "path": "src/ui/primitives/sonner.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/sonner.tsx"
+        }
+      ]
+    },
+    {
+      "name": "use-mobile",
+      "type": "registry:hook",
+      "title": "useIsMobile",
+      "description": "Whether the viewport is narrower than the md breakpoint, as the sidebar uses it.",
+      "devDependencies": ["vitest@^4.1.11"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "src/ui/use-mobile.ts",
+          "type": "registry:file",
+          "target": "src/ui/use-mobile.ts"
+        },
+        {
+          "path": "src/ui/use-mobile.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/use-mobile.test.ts"
+        }
+      ]
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "description": "shadcn's Sidebar: a provider that remembers the open state, a sidebar that collapses to icons or off canvas and is a sheet on a phone, the inset, rail, trigger and menu parts.",
+      "dependencies": [
+        "@radix-ui/react-slot@^1.4.0",
+        "class-variance-authority@^0.7.1",
+        "lucide-react@^0.510.0"
+      ],
+      "registryDependencies": [
+        "@koderi/utils",
+        "@koderi/use-mobile",
+        "@koderi/button",
+        "@koderi/input",
+        "@koderi/separator",
+        "@koderi/sheet",
+        "@koderi/skeleton",
+        "@koderi/tooltip"
+      ],
+      "files": [
+        {
+          "path": "src/ui/primitives/sidebar.tsx",
+          "type": "registry:file",
+          "target": "src/ui/primitives/sidebar.tsx"
+        },
+        {
+          "path": "src/ui/primitives/sidebar-context.ts",
+          "type": "registry:file",
+          "target": "src/ui/primitives/sidebar-context.ts"
+        },
+        {
+          "path": "src/ui/primitives/sidebar-context.test.ts",
+          "type": "registry:file",
+          "target": "src/ui/primitives/sidebar-context.test.ts"
+        }
+      ],
+      "devDependencies": ["vitest@^4.1.11"]
+    },
+    {
       "name": "toast",
       "type": "registry:hook",
       "title": "Toasts",
-      "description": "Sonner drawn with the app-toast classes, and the notify helpers that set the wording.",
+      "description": "The app toaster on shadcn's Sonner, drawn with the app-toast classes, and the notify helpers that set the wording.",
       "dependencies": ["sonner@^2.0.7"],
-      "registryDependencies": ["@koderi/theme"],
+      "registryDependencies": ["@koderi/theme", "@koderi/sonner"],
       "files": [
         {
           "path": "src/ui/notify.ts",
@@ -441,9 +684,9 @@
       "name": "confirm-dialog",
       "type": "registry:component",
       "title": "Confirm dialog",
-      "description": "A dialog for a destructive step, with a pending state and an optional extra block.",
+      "description": "An alert dialog for a destructive step, with a pending state and an optional extra block.",
       "dependencies": ["lucide-react@^0.510.0"],
-      "registryDependencies": ["@koderi/dialog", "@koderi/button"],
+      "registryDependencies": ["@koderi/alert-dialog", "@koderi/button"],
       "files": [
         {
           "path": "src/ui/confirm-dialog.tsx",
@@ -459,7 +702,7 @@
       "description": "The filter field above a list, plus the toolbar that appears when rows are selected.",
       "dependencies": ["lucide-react@^0.510.0"],
       "registryDependencies": [
-        "@koderi/input",
+        "@koderi/input-group",
         "@koderi/button",
         "@koderi/field-control",
         "@koderi/utils"
@@ -478,7 +721,13 @@
       "title": "Detail shell",
       "description": "The detail frame: title bar with a badge, tab strip, action rail, footer, and the overview rows that fill it.",
       "dependencies": ["lucide-react@^0.510.0"],
-      "registryDependencies": ["@koderi/button", "@koderi/utils"],
+      "registryDependencies": [
+        "@koderi/tabs",
+        "@koderi/badge",
+        "@koderi/button",
+        "@koderi/empty",
+        "@koderi/utils"
+      ],
       "files": [
         {
           "path": "src/ui/detail-shell.tsx",
@@ -493,7 +742,7 @@
       "title": "Settings frame",
       "description": "A section list beside the form, and a footer that knows whether there is anything to save.",
       "dependencies": ["lucide-react@^0.510.0"],
-      "registryDependencies": ["@koderi/button", "@koderi/utils"],
+      "registryDependencies": ["@koderi/button", "@koderi/separator", "@koderi/utils"],
       "files": [
         {
           "path": "src/ui/settings-section.tsx",
@@ -506,9 +755,17 @@
       "name": "form",
       "type": "registry:component",
       "title": "Form controls",
-      "description": "Field, NumberInput, SwitchField, Disclosure and ChoiceCards: the four controls the apps add on top of the primitives.",
+      "description": "Field, NumberInput, SwitchField, Disclosure and ChoiceCards on shadcn's field, switch, collapsible and radio group.",
       "dependencies": ["lucide-react@^0.510.0"],
-      "registryDependencies": ["@koderi/input", "@koderi/utils"],
+      "registryDependencies": [
+        "@koderi/field",
+        "@koderi/input",
+        "@koderi/switch",
+        "@koderi/collapsible",
+        "@koderi/radio-group",
+        "@koderi/button",
+        "@koderi/utils"
+      ],
       "files": [
         {
           "path": "src/ui/form.tsx",
@@ -521,10 +778,10 @@
       "name": "charts",
       "type": "registry:component",
       "title": "Charts",
-      "description": "TimeChart with a crosshair tooltip and legend, Sparkline for a table cell, StateTimeline, and the series palette. Ranges are passed in as props.",
-      "dependencies": ["recharts@^2.15.4"],
+      "description": "TimeChart on shadcn's ChartContainer with a crosshair tooltip and legend, Sparkline for a table cell, StateTimeline, and the series palette. Ranges are passed in as props.",
+      "dependencies": ["recharts@^3.10.1"],
       "devDependencies": ["vitest@^4.1.11"],
-      "registryDependencies": ["@koderi/utils"],
+      "registryDependencies": ["@koderi/chart", "@koderi/card", "@koderi/utils"],
       "files": [
         {
           "path": "src/ui/charts.tsx",
@@ -587,10 +844,10 @@
       "name": "command-palette",
       "type": "registry:component",
       "title": "Command palette",
-      "description": "cmdk on Ctrl+K over the same nav, with useCommands so a page can add its own actions.",
-      "dependencies": ["cmdk@^1.1.1", "lucide-react@^0.510.0", "@tanstack/react-router@^1.132.47"],
+      "description": "shadcn's CommandDialog on Ctrl+K over the same nav, with useCommands so a page can add its own actions.",
+      "dependencies": ["lucide-react@^0.510.0", "@tanstack/react-router@^1.132.47"],
       "devDependencies": ["vitest@^4.1.11"],
-      "registryDependencies": ["@koderi/nav", "@koderi/dialog", "@koderi/utils"],
+      "registryDependencies": ["@koderi/nav", "@koderi/command", "@koderi/utils"],
       "files": [
         {
           "path": "src/ui/layout/command-palette.tsx",
@@ -669,9 +926,12 @@
       "registryDependencies": [
         "@koderi/theme",
         "@koderi/utils",
+        "@koderi/table",
+        "@koderi/button",
         "@koderi/badge",
         "@koderi/popover",
-        "@koderi/checkbox"
+        "@koderi/checkbox",
+        "@koderi/progress"
       ],
       "files": [
         {
@@ -780,14 +1040,15 @@
       "name": "app-shell",
       "type": "registry:component",
       "title": "App shell",
-      "description": "The frame: a sidebar that collapses and remembers it, a mobile sheet, an h-14 header with the palette, and slots for the wordmark, header items and sidebar footer.",
+      "description": "The frame on shadcn's Sidebar, after the sidebar-07 block: a sidebar that collapses to icons and remembers it, a sheet on a phone, an h-14 header with the palette, and slots for the brand, header items and sidebar footer.",
       "dependencies": ["lucide-react@^0.510.0", "@tanstack/react-router@^1.132.47"],
       "registryDependencies": [
         "@koderi/nav",
         "@koderi/command-palette",
         "@koderi/use-persisted",
-        "@koderi/tooltip",
-        "@koderi/sheet",
+        "@koderi/sidebar",
+        "@koderi/kbd",
+        "@koderi/separator",
         "@koderi/button",
         "@koderi/utils"
       ],
@@ -796,6 +1057,16 @@
           "path": "src/ui/layout/app-shell.tsx",
           "type": "registry:file",
           "target": "src/ui/layout/app-shell.tsx"
+        },
+        {
+          "path": "src/ui/layout/app-sidebar.tsx",
+          "type": "registry:file",
+          "target": "src/ui/layout/app-sidebar.tsx"
+        },
+        {
+          "path": "src/ui/layout/nav-main.tsx",
+          "type": "registry:file",
+          "target": "src/ui/layout/nav-main.tsx"
         }
       ]
     },
@@ -828,6 +1099,20 @@
         "@koderi/scroll-area",
         "@koderi/skeleton",
         "@koderi/table",
+        "@koderi/alert-dialog",
+        "@koderi/collapsible",
+        "@koderi/radio-group",
+        "@koderi/native-select",
+        "@koderi/command",
+        "@koderi/kbd",
+        "@koderi/input-group",
+        "@koderi/field",
+        "@koderi/empty",
+        "@koderi/progress",
+        "@koderi/chart",
+        "@koderi/sonner",
+        "@koderi/use-mobile",
+        "@koderi/sidebar",
         "@koderi/toast",
         "@koderi/status",
         "@koderi/page-shell",

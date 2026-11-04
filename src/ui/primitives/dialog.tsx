@@ -32,8 +32,10 @@ const DialogContent = React.forwardRef<
      * confirmations and pickers, where closing on an outside click means "never mind".
      */
     form?: boolean;
+    /** Leave the corner close button out, for a palette or picker that has its own. */
+    showCloseButton?: boolean;
   }
->(({ className, children, form, onInteractOutside, ...props }, ref) => (
+>(({ className, children, form, showCloseButton = true, onInteractOutside, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -49,10 +51,12 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-3 top-3 rounded-sm p-2 text-muted-foreground hover:bg-secondary hover:text-foreground">
-        <X className="size-4" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
+      {showCloseButton ? (
+        <DialogPrimitive.Close className="absolute right-3 top-3 rounded-sm p-2 text-muted-foreground hover:bg-secondary hover:text-foreground">
+          <X className="size-4" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+      ) : null}
     </DialogPrimitive.Content>
   </DialogPortal>
 ));

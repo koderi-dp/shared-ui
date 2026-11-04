@@ -45,7 +45,14 @@ import {
 import { Input } from "@/ui/primitives/input";
 import { Label } from "@/ui/primitives/label";
 import { ScrollArea } from "@/ui/primitives/scroll-area";
-import { Select } from "@/ui/primitives/select";
+import { NativeSelect, NativeSelectOption } from "@/ui/primitives/native-select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/ui/primitives/select";
 import { Separator } from "@/ui/primitives/separator";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/ui/primitives/sheet";
 import { Skeleton } from "@/ui/primitives/skeleton";
@@ -179,11 +186,23 @@ export function PrimitivesPage() {
               <Input defaultValue="" placeholder="Platform" />
             </Field>
             <Field label="Region">
-              <Select defaultValue="eu" aria-label="Region">
-                <option value="us">United States</option>
-                <option value="eu">Europe</option>
-                <option value="ap">Asia Pacific</option>
+              <Select defaultValue="eu">
+                <SelectTrigger aria-label="Region">
+                  <SelectValue placeholder="Pick a region" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="us">United States</SelectItem>
+                  <SelectItem value="eu">Europe</SelectItem>
+                  <SelectItem value="ap">Asia Pacific</SelectItem>
+                </SelectContent>
               </Select>
+            </Field>
+            <Field label="Zone" hint="A native select, for a table row or a dense form.">
+              <NativeSelect defaultValue="b">
+                <NativeSelectOption value="a">Zone A</NativeSelectOption>
+                <NativeSelectOption value="b">Zone B</NativeSelectOption>
+                <NativeSelectOption value="c">Zone C</NativeSelectOption>
+              </NativeSelect>
             </Field>
             <Field label="Notes">
               <Textarea placeholder="Anything the next person should know" aria-label="Notes" />

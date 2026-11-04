@@ -1,6 +1,9 @@
 import { Copy, RefreshCcw, type LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { IconButton } from "@/ui/primitives/button";
+import { Badge } from "@/ui/primitives/badge";
+import { Button, IconButton } from "@/ui/primitives/button";
+import { Empty, EmptyContent } from "@/ui/primitives/empty";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/primitives/tabs";
 import { cn } from "@/ui/utils";
 
 export type DetailAction = {
@@ -72,77 +75,73 @@ export function DetailShell<Id extends string>({
       {actions.length > 0 ? (
         <div className="flex shrink-0 gap-1.5 overflow-x-auto border-b border-border px-3 py-2 md:hidden">
           {actions.map((action) => (
-            <button
+            <Button
               key={action.id}
               type="button"
+              variant="ghost"
+              size="sm"
+              icon={action.icon}
               disabled={action.disabled}
               onClick={action.onClick}
-              className={cn(
-                "flex shrink-0 items-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium transition-colors disabled:opacity-35",
-                tone(action),
-              )}
+              className={cn("h-auto shrink-0 px-3 py-2 disabled:opacity-35", tone(action))}
             >
-              <action.icon className="size-4 shrink-0" strokeWidth={1.75} />
               {action.label}
-            </button>
+            </Button>
           ))}
         </div>
       ) : null}
 
-      <div
-        role="tablist"
-        className="flex shrink-0 gap-1 overflow-x-auto border-b border-border px-3 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      <Tabs
+        value={activeTab}
+        onValueChange={(tab) => onActiveTabChange(tab as Id)}
+        className="flex min-h-0 flex-1 flex-col"
       >
-        {tabs.map((tab) => {
-          const active = tab.id === activeTab;
-          return (
-            <button
+        <TabsList className="flex h-auto shrink-0 justify-start gap-1 overflow-x-auto rounded-none border-b border-border bg-transparent px-3 pt-1 pb-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {tabs.map((tab) => (
+            <TabsTrigger
               key={tab.id}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => onActiveTabChange(tab.id)}
-              className={cn(
-                "relative flex shrink-0 items-center gap-1.5 rounded-t-md px-3 py-2.5 text-xs font-medium transition-colors md:py-2",
-                active
-                  ? "bg-card text-foreground shadow-[var(--shadow-border)]"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
+              value={tab.id}
+              className="relative shrink-0 gap-1.5 rounded-none rounded-t-md px-3 py-2.5 text-xs hover:text-foreground md:py-2"
             >
               {tab.label}
               {tab.count != null ? (
-                <span className="rounded-full bg-secondary px-1.5 text-[10px] tabular-nums text-muted-foreground">
+                <Badge className="rounded-full px-1.5 py-0 text-[10px] tracking-normal tabular-nums">
                   {tab.count}
-                </span>
+                </Badge>
               ) : null}
-            </button>
-          );
-        })}
-      </div>
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-      <div className="flex min-h-0 flex-1 overflow-hidden bg-card/30">
-        {actions.length > 0 ? (
-          <aside className="hidden w-16 shrink-0 flex-col gap-0.5 border-r border-border bg-inset/50 p-1.5 md:flex">
-            {actions.map((action) => (
-              <button
-                key={action.id}
-                type="button"
-                disabled={action.disabled}
-                title={action.label}
-                onClick={action.onClick}
-                className={cn(
-                  "flex flex-col items-center gap-1 rounded-md px-1 py-2 text-xs leading-tight transition-colors disabled:opacity-35",
-                  tone(action),
-                )}
-              >
-                <action.icon className="size-[18px] shrink-0" strokeWidth={1.75} />
-                <span className="max-w-full text-center">{action.label}</span>
-              </button>
-            ))}
-          </aside>
-        ) : null}
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">{children}</div>
-      </div>
+        <div className="flex min-h-0 flex-1 overflow-hidden bg-card/30">
+          {actions.length > 0 ? (
+            <aside className="hidden w-16 shrink-0 flex-col gap-0.5 border-r border-border bg-inset/50 p-1.5 md:flex">
+              {actions.map((action) => (
+                <Button
+                  key={action.id}
+                  type="button"
+                  variant="ghost"
+                  disabled={action.disabled}
+                  onClick={action.onClick}
+                  className={cn(
+                    "h-auto flex-col gap-1 px-1 py-2 text-xs leading-tight font-normal whitespace-normal disabled:opacity-35 [&_svg]:size-[18px]",
+                    tone(action),
+                  )}
+                >
+                  <action.icon strokeWidth={1.75} aria-hidden="true" />
+                  <span className="max-w-full text-center">{action.label}</span>
+                </Button>
+              ))}
+            </aside>
+          ) : null}
+          <TabsContent
+            value={activeTab}
+            className="mt-0 flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto outline-none"
+          >
+            {children}
+          </TabsContent>
+        </div>
+      </Tabs>
 
       {footer ? (
         <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border px-4 py-1.5 text-[11px] text-muted-foreground">
@@ -173,15 +172,12 @@ export function OverviewRow({
         {children ?? value ?? "—"}
       </div>
       {copy ? (
-        <button
-          type="button"
-          className="shrink-0 rounded p-1 text-muted-foreground hover:bg-secondary hover:text-foreground"
+        <IconButton
+          icon={Copy}
+          label={`Copy ${label}`}
+          className="size-6 shrink-0 [&_svg]:size-3.5"
           onClick={() => void navigator.clipboard.writeText(copy)}
-          title="Copy"
-          aria-label={`Copy ${label}`}
-        >
-          <Copy className="size-3.5" />
-        </button>
+        />
       ) : null}
     </div>
   );
@@ -213,8 +209,8 @@ export function DetailSection({
 
 export function DetailEmpty({ children }: { children: ReactNode }) {
   return (
-    <div className="grid min-h-48 place-items-center px-4 py-10 text-center text-sm text-muted-foreground">
-      <div className="grid justify-items-center gap-3">{children}</div>
-    </div>
+    <Empty className="min-h-48 px-4 py-10 text-sm text-muted-foreground md:p-10">
+      <EmptyContent className="gap-3">{children}</EmptyContent>
+    </Empty>
   );
 }

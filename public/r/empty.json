@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "empty",
+  "title": "Empty",
+  "description": "The empty state: media, title, description and content.",
+  "registryDependencies": [
+    "@koderi/utils"
+  ],
+  "files": [
+    {
+      "path": "src/ui/primitives/empty.tsx",
+      "content": "import type * as React from \"react\";\nimport { cn } from \"@/ui/utils\";\n\nfunction Empty({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"empty\"\n      className={cn(\n        \"flex min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-lg p-6 text-center text-balance md:p-10\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction EmptyHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"empty-header\"\n      className={cn(\"flex max-w-sm flex-col items-center gap-2 text-center\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction EmptyMedia({\n  className,\n  variant = \"default\",\n  ...props\n}: React.ComponentProps<\"div\"> & { variant?: \"default\" | \"icon\" }) {\n  return (\n    <div\n      data-slot=\"empty-icon\"\n      data-variant={variant}\n      className={cn(\n        \"mb-1 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0\",\n        variant === \"icon\" &&\n          \"size-10 rounded-lg bg-secondary text-muted-foreground shadow-[var(--shadow-border)] [&_svg:not([class*='size-'])]:size-5\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction EmptyTitle({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"empty-title\"\n      className={cn(\"text-sm font-medium tracking-tight text-foreground\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction EmptyDescription({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"empty-description\"\n      className={cn(\n        \"text-sm/relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-foreground\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction EmptyContent({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"empty-content\"\n      className={cn(\n        \"flex w-full max-w-sm min-w-0 flex-col items-center gap-3 text-sm text-balance\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia };\n",
+      "type": "registry:file",
+      "target": "src/ui/primitives/empty.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

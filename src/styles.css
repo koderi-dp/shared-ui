@@ -41,6 +41,14 @@
   --color-info: #8aa4b0;
   --color-elevated: #181a21;
   --color-inset: #0d0e12;
+  --color-sidebar: #0a0b0d;
+  --color-sidebar-foreground: #eceef2;
+  --color-sidebar-primary: #d7dde6;
+  --color-sidebar-primary-foreground: #0a0b0d;
+  --color-sidebar-accent: #1c1e26;
+  --color-sidebar-accent-foreground: #eceef2;
+  --color-sidebar-border: rgb(236 238 242 / 8%);
+  --color-sidebar-ring: #d7dde6;
   /* Opaque hover for pinned data-grid cells, so scrolled cells never show through. */
   --color-grid-pinned-hover: color-mix(
     in oklab,

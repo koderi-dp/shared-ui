@@ -1,8 +1,12 @@
-import { X as ButtonXIcon } from "lucide-react";
 import { Search, X } from "lucide-react";
 import { useCallback, useRef, type ReactNode } from "react";
 import { Button } from "@/ui/primitives/button";
-import { Input } from "@/ui/primitives/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/ui/primitives/input-group";
 import { embeddedFieldClass, embeddedFieldFocusClass } from "@/ui/primitives/field-control";
 import { cn } from "@/ui/utils";
 
@@ -25,14 +29,16 @@ export function ListFilterBar({
   }, [onChange]);
 
   return (
-    <div
+    <InputGroup
       className={cn(
-        "flex items-center gap-2 rounded-xl bg-card px-3 py-2 shadow-[var(--shadow-border)]",
+        "h-12 rounded-xl bg-card px-1 has-[[data-slot=input-group-control]:focus-visible]:shadow-[var(--shadow-border)]",
         className,
       )}
     >
-      <Search className="size-3.5 shrink-0 text-muted-foreground" />
-      <Input
+      <InputGroupAddon>
+        <Search className="size-3.5" />
+      </InputGroupAddon>
+      <InputGroupInput
         ref={inputRef}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -43,22 +49,23 @@ export function ListFilterBar({
           }
         }}
         placeholder={placeholder}
-        className={cn("h-8 flex-1", embeddedFieldClass, embeddedFieldFocusClass)}
+        aria-label={placeholder}
+        className={cn("h-8 rounded-md", embeddedFieldClass, embeddedFieldFocusClass)}
       />
       {value ? (
-        <Button
-          type="button"
-          size="icon-sm"
-          variant="ghost"
-          className="size-7 shrink-0"
-          onClick={clear}
-          title="Clear filter (Esc)"
-          aria-label="Clear filter"
-        >
-          <X className="size-3.5" />
-        </Button>
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton
+            size="icon-xs"
+            className="size-7"
+            onClick={clear}
+            title="Clear filter (Esc)"
+            aria-label="Clear filter"
+          >
+            <X />
+          </InputGroupButton>
+        </InputGroupAddon>
       ) : null}
-    </div>
+    </InputGroup>
   );
 }
 
@@ -85,7 +92,7 @@ export function SelectionToolbar({
       <span className="text-xs text-muted-foreground">{count} selected</span>
       {children}
       <Button
-        icon={ButtonXIcon}
+        icon={X}
         size="sm"
         variant="ghost"
         className="h-7 px-2 text-xs"

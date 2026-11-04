@@ -2,12 +2,13 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "toast",
   "title": "Toasts",
-  "description": "Sonner drawn with the app-toast classes, and the notify helpers that set the wording.",
+  "description": "The app toaster on shadcn's Sonner, drawn with the app-toast classes, and the notify helpers that set the wording.",
   "dependencies": [
     "sonner@^2.0.7"
   ],
   "registryDependencies": [
-    "@koderi/theme"
+    "@koderi/theme",
+    "@koderi/sonner"
   ],
   "files": [
     {
@@ -18,7 +19,7 @@
     },
     {
       "path": "src/ui/toaster.tsx",
-      "content": "import { Toaster as Sonner } from \"sonner\";\n\n/** Sonner, drawn with the `app-toast` classes in styles.css. Mount once at the root. */\nexport function AppToaster() {\n  return (\n    <Sonner\n      theme=\"dark\"\n      position=\"bottom-right\"\n      closeButton\n      duration={3500}\n      gap={8}\n      offset={20}\n      visibleToasts={3}\n      className=\"app-toaster\"\n      toastOptions={{\n        unstyled: true,\n        classNames: {\n          toast: \"app-toast\",\n          content: \"app-toast__content\",\n          title: \"app-toast__title\",\n          description: \"app-toast__description\",\n          icon: \"app-toast__icon\",\n          closeButton: \"app-toast__close\",\n          success: \"app-toast--success\",\n          error: \"app-toast--error\",\n          warning: \"app-toast--warning\",\n          info: \"app-toast--info\",\n        },\n      }}\n    />\n  );\n}\n",
+      "content": "import { Toaster } from \"@/ui/primitives/sonner\";\n\n/** The shadcn Sonner toaster, drawn with the `app-toast` classes in styles.css. Mount once at the root. */\nexport function AppToaster() {\n  return (\n    <Toaster\n      position=\"bottom-right\"\n      closeButton\n      duration={3500}\n      gap={8}\n      offset={20}\n      visibleToasts={3}\n      className=\"app-toaster\"\n      toastOptions={{\n        unstyled: true,\n        classNames: {\n          toast: \"app-toast\",\n          content: \"app-toast__content\",\n          title: \"app-toast__title\",\n          description: \"app-toast__description\",\n          icon: \"app-toast__icon\",\n          closeButton: \"app-toast__close\",\n          success: \"app-toast--success\",\n          error: \"app-toast--error\",\n          warning: \"app-toast--warning\",\n          info: \"app-toast--info\",\n        },\n      }}\n    />\n  );\n}\n",
       "type": "registry:file",
       "target": "src/ui/toaster.tsx"
     }
