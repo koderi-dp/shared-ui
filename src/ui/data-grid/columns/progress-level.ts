@@ -10,7 +10,7 @@ export function usageBarFillClass(percent: number, kind: ProgressVariant): strin
   const level = usageLevel(percent);
   if (level === "critical") return "bg-destructive";
   if (level === "warn") return "bg-amber-500";
-  if (kind === "cpu") return "bg-foreground/65";
+  if (kind === "cpu") return "bg-muted-foreground/45";
   return "bg-emerald-500";
 }
 

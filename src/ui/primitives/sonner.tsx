@@ -1,13 +1,15 @@
 import type * as React from "react";
 import { CircleCheck, Info, LoaderCircle, OctagonX, TriangleAlert } from "lucide-react";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
+import { useTheme } from "@/ui/theme";
 import { cn } from "@/ui/utils";
 
-/** Sonner on the theme's surfaces. The theme is dark only, so there is no theme switch to read. */
+/** shadcn's Sonner on the theme's surfaces, in the theme ThemeProvider resolved. */
 function Toaster({ className, style, ...props }: ToasterProps) {
+  const { resolvedTheme } = useTheme();
   return (
     <Sonner
-      theme="dark"
+      theme={resolvedTheme}
       className={cn("toaster group", className)}
       icons={{
         success: <CircleCheck className="size-4" />,

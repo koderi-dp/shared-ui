@@ -10,8 +10,9 @@ import {
 } from "@/ui/primitives/chart";
 import { cn } from "@/ui/utils";
 
-const AXIS = "#8b909c";
-const GRID = "rgb(236 238 242 / 8%)";
+// Theme colours, so the chart follows light and dark.
+const AXIS = "var(--muted-foreground)";
+const GRID = "var(--border)";
 
 export type ChartSeries = { id: string; name: string; color: string };
 export type ChartRow = { t: number } & Record<string, number | null>;
@@ -138,7 +139,7 @@ export function TimeChart({
                 allowDecimals
               />
               <ChartTooltip
-                cursor={{ stroke: "rgb(236 238 242 / 25%)" }}
+                cursor={{ stroke: "var(--ring)" }}
                 isAnimationActive={false}
                 content={
                   <ChartTooltipContent
@@ -192,7 +193,7 @@ export function TimeChart({
                   stroke={item.color}
                   strokeWidth={2}
                   dot={false}
-                  activeDot={{ r: 4, fill: item.color, stroke: "#12141a", strokeWidth: 2 }}
+                  activeDot={{ r: 4, fill: item.color, stroke: "var(--card)", strokeWidth: 2 }}
                   connectNulls={false}
                   isAnimationActive={false}
                 />

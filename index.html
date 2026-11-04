@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <title>Shared UI</title>
+    <script>
+      // Before the first paint: the theme ThemeProvider stored (JSON), or the OS's.
+      try {
+        const stored = JSON.parse(localStorage.getItem("ui-theme") ?? '"system"');
+        const dark =
+          stored === "dark" ||
+          (stored !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.add(dark ? "dark" : "light");
+      } catch {
+        document.documentElement.classList.add("light");
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -41,6 +41,8 @@
     "@koderi/sonner",
     "@koderi/use-mobile",
     "@koderi/sidebar",
+    "@koderi/theme-provider",
+    "@koderi/mode-toggle",
     "@koderi/toast",
     "@koderi/status",
     "@koderi/page-shell",

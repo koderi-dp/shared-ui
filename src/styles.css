@@ -7,65 +7,176 @@
 @import "tw-animate-css";
 @import "sonner/dist/styles.css";
 
-@theme {
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * shadcn's default neutral theme (new-york v4), light on :root and dark on .dark, plus the
+ * few tokens the components add on top: inset and elevated surfaces, the status tones
+ * and the border-as-shadow. ThemeProvider sets the class on <html>.
+ */
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Additions: a field's sunken surface and a raised one (menus, toasts). */
+  --inset: oklch(0.985 0 0);
+  --elevated: oklch(1 0 0);
+  /* Status tones: the colour, and a readable text colour on a 15% tint of it. */
+  --signal: oklch(0.6 0.118 184.704);
+  --signal-fg: oklch(0.42 0.09 184.704);
+  --warn: oklch(0.769 0.165 70.08);
+  --warn-fg: oklch(0.47 0.12 60);
+  --danger: oklch(0.577 0.245 27.325);
+  --danger-fg: oklch(0.505 0.213 27.518);
+  --info: oklch(0.588 0.1 236);
+  --offline: oklch(0.708 0 0);
+  --scrollbar: oklch(0 0 0 / 18%);
+  --shadow-border: 0 0 0 1px var(--border);
+  --shadow-border-hover: 0 0 0 1px oklch(0.85 0 0);
+  --shadow-elevated: 0 0 0 1px var(--border), 0 16px 40px -16px oklch(0 0 0 / 18%);
+  --shadow-pinned: 4px 0 6px -4px oklch(0 0 0 / 15%);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+
+  --inset: oklch(0.175 0 0);
+  --elevated: oklch(0.235 0 0);
+  --signal: oklch(0.696 0.17 162.48);
+  --signal-fg: oklch(0.85 0.1 162.48);
+  --warn: oklch(0.769 0.188 70.08);
+  --warn-fg: oklch(0.9 0.1 85);
+  --danger: oklch(0.704 0.191 22.216);
+  --danger-fg: oklch(0.85 0.09 22.216);
+  --info: oklch(0.72 0.09 236);
+  --offline: oklch(0.556 0 0);
+  --scrollbar: oklch(1 0 0 / 16%);
+  --shadow-border: 0 0 0 1px var(--border);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 18%);
+  --shadow-elevated: 0 0 0 1px var(--border), 0 24px 48px -16px oklch(0 0 0 / 55%);
+  --shadow-pinned: 4px 0 6px -4px oklch(0 0 0 / 60%);
+}
+
+@theme inline {
   --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  --color-background: #0a0b0d;
-  --color-foreground: #eceef2;
-  --color-card: #12141a;
-  --color-card-foreground: #eceef2;
-  --color-popover: #16181f;
-  --color-popover-foreground: #eceef2;
-  --color-primary: #d7dde6;
-  --color-primary-foreground: #0a0b0d;
-  --color-secondary: #1c1e26;
-  --color-secondary-foreground: #eceef2;
-  --color-muted: #1c1e26;
-  --color-muted-foreground: #8b909c;
-  --color-accent: #1c1e26;
-  --color-accent-foreground: #eceef2;
-  --color-destructive: #c45c5c;
-  --color-border: rgb(236 238 242 / 8%);
-  --color-input: rgb(236 238 242 / 10%);
-  --color-ring: #d7dde6;
-  --color-signal: #6a8f88;
-  --color-signal-fg: #d7ece8;
-  --color-warn: #c4a35c;
-  --color-warn-fg: #f3e6c4;
-  --color-danger: #c45c5c;
-  --color-danger-fg: #f0d0d0;
-  --color-online: #6a8f88;
-  --color-degraded: #c4a35c;
-  --color-offline: #8b909c;
-  --color-info: #8aa4b0;
-  --color-elevated: #181a21;
-  --color-inset: #0d0e12;
-  --color-sidebar: #0a0b0d;
-  --color-sidebar-foreground: #eceef2;
-  --color-sidebar-primary: #d7dde6;
-  --color-sidebar-primary-foreground: #0a0b0d;
-  --color-sidebar-accent: #1c1e26;
-  --color-sidebar-accent-foreground: #eceef2;
-  --color-sidebar-border: rgb(236 238 242 / 8%);
-  --color-sidebar-ring: #d7dde6;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-inset: var(--inset);
+  --color-elevated: var(--elevated);
+  --color-signal: var(--signal);
+  --color-signal-fg: var(--signal-fg);
+  --color-warn: var(--warn);
+  --color-warn-fg: var(--warn-fg);
+  --color-danger: var(--danger);
+  --color-danger-fg: var(--danger-fg);
+  --color-online: var(--signal);
+  --color-degraded: var(--warn);
+  --color-offline: var(--offline);
+  --color-info: var(--info);
   /* Opaque hover for pinned data-grid cells, so scrolled cells never show through. */
-  --color-grid-pinned-hover: color-mix(
-    in oklab,
-    var(--color-secondary) 40%,
-    var(--color-background)
-  );
+  --color-grid-pinned-hover: color-mix(in oklab, var(--secondary) 40%, var(--background));
 
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius: 0.625rem;
-
-  --shadow-border: 0 0 0 1px rgb(255 255 255 / 8%);
-  --shadow-border-hover: 0 0 0 1px rgb(255 255 255 / 13%);
-  --shadow-elevated: 0 0 0 1px rgb(255 255 255 / 8%), 0 24px 48px -16px rgb(0 0 0 / 55%);
+  --shadow-border: var(--shadow-border);
+  --shadow-border-hover: var(--shadow-border-hover);
+  --shadow-elevated: var(--shadow-elevated);
+  --shadow-pinned: var(--shadow-pinned);
 
   --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -76,11 +187,11 @@
     @apply border-border;
     /* Thin, quiet scrollbars, so a wide table's own bar matches the dark surfaces. */
     scrollbar-width: thin;
-    scrollbar-color: rgb(236 238 242 / 16%) transparent;
+    scrollbar-color: var(--scrollbar) transparent;
   }
 
   html {
-    color-scheme: dark;
+    color-scheme: light;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100dvh;
@@ -94,13 +205,14 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    background-image:
-      radial-gradient(1200px 600px at 0% -10%, rgb(106 143 136 / 7%), transparent 55%),
-      radial-gradient(900px 500px at 100% 0%, rgb(215 221 230 / 4%), transparent 50%);
     height: 100dvh;
     overflow: hidden;
     overflow: clip;
     overscroll-behavior: none;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   button:not(:disabled),
@@ -119,7 +231,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid rgb(236 238 242 / 35%);
+    outline: 2px solid color-mix(in oklab, var(--ring) 70%, transparent);
     outline-offset: 2px;
   }
 
@@ -197,7 +309,7 @@
     overflow: hidden;
     border-radius: 99px;
     background: var(--color-muted-foreground);
-    box-shadow: 0 0 10px rgb(139 144 156 / 35%);
+    box-shadow: 0 0 10px color-mix(in oklab, var(--offline) 35%, transparent);
     color: transparent;
   }
 
@@ -218,7 +330,7 @@
     align-items: center;
     justify-content: center;
     border: 0;
-    border-radius: var(--radius-xs);
+    border-radius: calc(var(--radius) - 6px);
     background: transparent;
     color: var(--color-muted-foreground);
     cursor: pointer;
@@ -234,22 +346,22 @@
 
   .app-toast--success .app-toast__icon {
     background: var(--color-signal);
-    box-shadow: 0 0 10px rgb(106 143 136 / 50%);
+    box-shadow: 0 0 10px color-mix(in oklab, var(--signal) 50%, transparent);
   }
 
   .app-toast--error .app-toast__icon {
     background: var(--color-danger);
-    box-shadow: 0 0 10px rgb(196 92 92 / 50%);
+    box-shadow: 0 0 10px color-mix(in oklab, var(--danger) 50%, transparent);
   }
 
   .app-toast--warning .app-toast__icon {
     background: var(--color-warn);
-    box-shadow: 0 0 10px rgb(196 163 92 / 45%);
+    box-shadow: 0 0 10px color-mix(in oklab, var(--warn) 45%, transparent);
   }
 
   .app-toast--info .app-toast__icon {
     background: var(--color-info);
-    box-shadow: 0 0 10px rgb(138 164 176 / 45%);
+    box-shadow: 0 0 10px color-mix(in oklab, var(--info) 45%, transparent);
   }
 }
 

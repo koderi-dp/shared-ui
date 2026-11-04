@@ -345,7 +345,7 @@ export function DataGrid<T extends RowData>({
                     (stickyHeader || pinned) && "bg-background",
                     stickyHeader && "sticky top-0 z-20",
                     pinned && "sticky z-30",
-                    id === lastPinned && "shadow-[4px_0_6px_-4px_rgb(0_0_0/0.6)]",
+                    id === lastPinned && "shadow-pinned",
                     classNames?.headerCell,
                     col.headerClassName,
                   )}
@@ -388,7 +388,7 @@ export function DataGrid<T extends RowData>({
                   (stickyHeader || pinned) && "bg-background",
                   stickyHeader && "sticky top-0 z-20",
                   pinned && "sticky z-30",
-                  id === lastPinned && "shadow-[4px_0_6px_-4px_rgb(0_0_0/0.6)]",
+                  id === lastPinned && "shadow-pinned",
                   classNames?.headerCell,
                   col.headerClassName,
                 )}
@@ -473,7 +473,7 @@ export function DataGrid<T extends RowData>({
                           ? cn(
                               "sticky z-10 bg-background",
                               onRowClick && "group-hover:bg-grid-pinned-hover",
-                              col.id === lastPinned && "shadow-[4px_0_6px_-4px_rgb(0_0_0/0.6)]",
+                              col.id === lastPinned && "shadow-pinned",
                             )
                           : "isolate",
                         "h-auto p-0",
