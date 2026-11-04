@@ -1,4 +1,12 @@
 import type { ComponentProps, ReactNode } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/ui/primitives/table";
 import { cn } from "@/ui/utils";
 
 export type KeyValueColumn = {
@@ -27,16 +35,20 @@ export type KeyValueTableProps = {
   children: ReactNode;
 };
 
-function Row(props: ComponentProps<"tr">) {
-  return <tr {...props} />;
+// The grid owns no padding or type here: the primitives' defaults are reset so the
+// caller's classes are the whole look, as before.
+function Row({ className, ...props }: ComponentProps<"tr">) {
+  return <TableRow className={cn("hover:bg-transparent", className)} {...props} />;
 }
 
-function Key(props: ComponentProps<"th">) {
-  return <th scope="row" {...props} />;
+function Key({ className, ...props }: ComponentProps<"th">) {
+  return (
+    <TableHead scope="row" className={cn("p-0 [font-weight:inherit]", className)} {...props} />
+  );
 }
 
-function Cell(props: ComponentProps<"td">) {
-  return <td {...props} />;
+function Cell({ className, ...props }: ComponentProps<"td">) {
+  return <TableCell className={cn("h-auto p-0", className)} {...props} />;
 }
 
 /**
@@ -44,35 +56,38 @@ function Cell(props: ComponentProps<"td">) {
  * DataGrid. No sorting, resizing or selection; the caller owns every class.
  */
 export function KeyValueTable({ caption, columns, classNames, children }: KeyValueTableProps) {
-  const table = (
-    <table className={classNames?.table}>
+  return (
+    <Table
+      containerClassName={classNames?.wrapper ?? "contents"}
+      className={cn("w-auto text-[length:inherit]", classNames?.table)}
+    >
       <caption className="sr-only">{caption}</caption>
       <colgroup>
         {columns.map((column) => (
           <col key={column.id} className={column.colClassName} />
         ))}
       </colgroup>
-      <thead className={classNames?.thead}>
-        <tr className={classNames?.headerRow}>
+      <TableHeader className={cn("text-[length:inherit] text-inherit", classNames?.thead)}>
+        <TableRow className={cn("hover:bg-transparent", classNames?.headerRow)}>
           {columns.map((column) => (
-            <th
+            <TableHead
               key={column.id}
               scope="col"
               className={cn(
+                "p-0 [font-weight:inherit]",
                 classNames?.headerCell,
                 column.align === "right" && "text-right",
                 column.headerClassName,
               )}
             >
               {column.header}
-            </th>
+            </TableHead>
           ))}
-        </tr>
-      </thead>
-      <tbody className={classNames?.tbody}>{children}</tbody>
-    </table>
+        </TableRow>
+      </TableHeader>
+      <TableBody className={classNames?.tbody}>{children}</TableBody>
+    </Table>
   );
-  return classNames?.wrapper ? <div className={classNames.wrapper}>{table}</div> : table;
 }
 
 KeyValueTable.Row = Row;

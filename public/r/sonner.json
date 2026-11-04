@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sonner",
+  "title": "Sonner",
+  "description": "shadcn's Sonner toaster on the theme's surfaces, in the theme ThemeProvider resolved.",
+  "dependencies": [
+    "sonner@^2.0.7",
+    "lucide-react@^0.510.0"
+  ],
+  "registryDependencies": [
+    "@koderi/utils",
+    "@koderi/theme-provider"
+  ],
+  "files": [
+    {
+      "path": "src/ui/primitives/sonner.tsx",
+      "content": "import type * as React from \"react\";\nimport { CircleCheck, Info, LoaderCircle, OctagonX, TriangleAlert } from \"lucide-react\";\nimport { Toaster as Sonner, type ToasterProps } from \"sonner\";\nimport { useTheme } from \"@/ui/theme\";\nimport { cn } from \"@/ui/utils\";\n\n/** shadcn's Sonner on the theme's surfaces, in the theme ThemeProvider resolved. */\nfunction Toaster({ className, style, ...props }: ToasterProps) {\n  const { resolvedTheme } = useTheme();\n  return (\n    <Sonner\n      theme={resolvedTheme}\n      className={cn(\"toaster group\", className)}\n      icons={{\n        success: <CircleCheck className=\"size-4\" />,\n        info: <Info className=\"size-4\" />,\n        warning: <TriangleAlert className=\"size-4\" />,\n        error: <OctagonX className=\"size-4\" />,\n        loading: <LoaderCircle className=\"size-4 animate-spin\" />,\n      }}\n      style={\n        {\n          \"--normal-bg\": \"var(--color-elevated)\",\n          \"--normal-text\": \"var(--color-foreground)\",\n          \"--normal-border\": \"var(--color-border)\",\n          \"--border-radius\": \"var(--radius-sm)\",\n          ...style,\n        } as React.CSSProperties\n      }\n      {...props}\n    />\n  );\n}\n\nexport { Toaster };\n",
+      "type": "registry:file",
+      "target": "src/ui/primitives/sonner.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

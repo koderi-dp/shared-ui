@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { CircleUser, LogOut, Settings, User } from "lucide-react";
 import { headerChipClass } from "@/ui/layout/nav";
 import { notify } from "@/ui/notify";
+import { Button } from "@/ui/primitives/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,13 +29,9 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          aria-label="Account"
-          className="flex size-9 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <CircleUser className="size-4" />
-        </button>
+        <Button type="button" variant="ghost" size="icon-sm" aria-label="Account">
+          <CircleUser />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuLabel>ada@example.com</DropdownMenuLabel>

@@ -1,63 +1,21 @@
 import type { ReactNode } from "react";
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ReferenceLine,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { CartesianGrid, Line, LineChart, ReferenceLine, XAxis, YAxis } from "recharts";
 import { clockTime, timeTicks } from "@/ui/chart-format";
+import { Card } from "@/ui/primitives/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/ui/primitives/chart";
 import { cn } from "@/ui/utils";
 
-const AXIS = "#8b909c";
-const GRID = "rgb(236 238 242 / 8%)";
+// Theme colours, so the chart follows light and dark.
+const AXIS = "var(--muted-foreground)";
+const GRID = "var(--border)";
 
 export type ChartSeries = { id: string; name: string; color: string };
 export type ChartRow = { t: number } & Record<string, number | null>;
-
-type TooltipEntry = { dataKey?: string | number; value?: number | string | null; color?: string };
-
-/** Crosshair tooltip: the time, then one row per series with its swatch, name and value. */
-function ChartTooltip({
-  active,
-  payload,
-  label,
-  series,
-  format,
-}: {
-  active?: boolean;
-  payload?: TooltipEntry[];
-  label?: number;
-  series: ChartSeries[];
-  format: (value: number) => string;
-}) {
-  if (!active || !payload || payload.length === 0 || label == null) return null;
-  const rows = series
-    .map((item) => ({ item, entry: payload.find((entry) => entry.dataKey === item.id) }))
-    .filter((row) => row.entry && row.entry.value != null);
-  if (rows.length === 0) return null;
-  return (
-    <div className="rounded-md bg-popover px-2.5 py-2 text-xs shadow-[var(--shadow-elevated)]">
-      <div className="mb-1 font-mono text-[11px] text-muted-foreground">{clockTime(label)}</div>
-      <div className="grid gap-1">
-        {rows.map(({ item, entry }) => (
-          <div key={item.id} className="flex items-center gap-2">
-            <span
-              className="size-2 shrink-0 rounded-sm"
-              style={{ backgroundColor: item.color }}
-              aria-hidden
-            />
-            <span className="min-w-0 flex-1 truncate text-muted-foreground">{item.name}</span>
-            <span className="font-mono tabular-nums">{format(Number(entry?.value))}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /**
  * A line chart over time with one line per series, in the frame Pylon's metric panels
@@ -104,15 +62,12 @@ export function TimeChart({
   };
   const hasData = rows.some((row) => series.some((item) => row[item.id] != null));
   const axis = timeTicks(from, to);
+  const config: ChartConfig = Object.fromEntries(
+    series.map((item) => [item.id, { label: item.name, color: item.color }]),
+  );
 
   return (
-    <section
-      className={cn(
-        "min-w-0 rounded-xl bg-card p-4 shadow-[var(--shadow-border)]",
-        fill && "flex flex-col",
-        className,
-      )}
-    >
+    <Card className={cn("min-w-0 p-4", fill && "flex flex-col", className)}>
       <div className="mb-3 flex items-start gap-2">
         <span className="mt-0.5 shrink-0 text-muted-foreground [&_svg]:size-4">{icon}</span>
         <div className="min-w-0 flex-1">
@@ -158,7 +113,7 @@ export function TimeChart({
             {emptyLabel}
           </div>
         ) : (
-          <ResponsiveContainer className="absolute inset-0" width="100%" height="100%">
+          <ChartContainer config={config} className="absolute inset-0 aspect-auto">
             {/* The right margin leaves room for half a time label at the last tick. */}
             <LineChart data={rows} margin={{ top: 8, right: 20, left: 0, bottom: 0 }}>
               <CartesianGrid stroke={GRID} vertical={false} />
@@ -183,10 +138,37 @@ export function TimeChart({
                 width={52}
                 allowDecimals
               />
-              <Tooltip
-                cursor={{ stroke: "rgb(236 238 242 / 25%)" }}
+              <ChartTooltip
+                cursor={{ stroke: "var(--ring)" }}
                 isAnimationActive={false}
-                content={<ChartTooltip series={series} format={format} />}
+                content={
+                  <ChartTooltipContent
+                    labelClassName="font-mono text-[11px] font-normal text-muted-foreground"
+                    labelFormatter={(_, payload) => {
+                      const t = (payload?.[0]?.payload as ChartRow | undefined)?.t;
+                      return t == null ? null : clockTime(t);
+                    }}
+                    formatter={(value, _name, item) =>
+                      value == null ? null : (
+                        <>
+                          <span
+                            className="size-2 shrink-0 rounded-sm"
+                            style={{ backgroundColor: item.color }}
+                            aria-hidden
+                          />
+                          <span className="flex flex-1 items-center justify-between gap-3 leading-none">
+                            <span className="truncate text-muted-foreground">
+                              {config[String(item.dataKey)]?.label ?? item.name}
+                            </span>
+                            <span className="font-mono tabular-nums text-foreground">
+                              {format(Number(value))}
+                            </span>
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                }
               />
               {(reference ?? []).map((line) => (
                 <ReferenceLine
@@ -211,16 +193,16 @@ export function TimeChart({
                   stroke={item.color}
                   strokeWidth={2}
                   dot={false}
-                  activeDot={{ r: 4, fill: item.color, stroke: "#12141a", strokeWidth: 2 }}
+                  activeDot={{ r: 4, fill: item.color, stroke: "var(--card)", strokeWidth: 2 }}
                   connectNulls={false}
                   isAnimationActive={false}
                 />
               ))}
             </LineChart>
-          </ResponsiveContainer>
+          </ChartContainer>
         )}
       </div>
-    </section>
+    </Card>
   );
 }
 
@@ -315,7 +297,7 @@ export function StateTimeline({
 }) {
   const span = Math.max(1, to - from);
   return (
-    <section className="rounded-xl bg-card p-4 shadow-[var(--shadow-border)]">
+    <Card className="p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <h3 className="text-sm font-medium">{title}</h3>
         <ul className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
@@ -383,6 +365,6 @@ export function StateTimeline({
           <span>{clockTime(to, false)}</span>
         </span>
       </div>
-    </section>
+    </Card>
   );
 }

@@ -1,11 +1,14 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/ui/utils";
+import { Badge } from "@/ui/primitives/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/ui/primitives/popover";
 import { fitChipCount, moreTagsLabel } from "./chip-fit";
 
 export type ChipColor = { bg: string; fg: string };
 
-export const CHIP = "max-w-40 truncate rounded px-1.5 py-0.5 text-[10px] font-medium";
+/** The chip's shape on top of Badge: square-ish and small enough for a table cell. */
+export const CHIP =
+  "block max-w-40 truncate rounded px-1.5 py-0.5 text-[10px] font-medium tracking-normal";
 
 /** Used when no `color` is given. */
 const NEUTRAL_CHIP = "bg-secondary text-secondary-foreground";
@@ -29,23 +32,23 @@ export function Chip({
   const style = color ? { backgroundColor: color.bg, color: color.fg } : undefined;
   const base = color ? CHIP : cn(CHIP, NEUTRAL_CHIP);
   return onSelect ? (
-    <button
-      type="button"
-      className={cn(base, className, FOCUS_RING)}
-      style={style}
-      title={tag}
-      onKeyDown={(e) => e.stopPropagation()}
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect(tag);
-      }}
-    >
-      {tag}
-    </button>
+    <Badge asChild className={cn(base, className, FOCUS_RING)} style={style}>
+      <button
+        type="button"
+        title={tag}
+        onKeyDown={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(tag);
+        }}
+      >
+        {tag}
+      </button>
+    </Badge>
   ) : (
-    <span className={cn(base, className)} style={style} title={tag}>
+    <Badge className={cn(base, className)} style={style} title={tag}>
       {tag}
-    </span>
+    </Badge>
   );
 }
 
@@ -67,15 +70,16 @@ function MoreChip({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button
-          type="button"
-          aria-label={moreTagsLabel(hidden.length)}
-          className={cn(CHIP, "shrink-0 bg-muted text-muted-foreground", FOCUS_RING)}
-          onKeyDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-        >
-          +{hidden.length}
-        </button>
+        <Badge asChild className={cn(CHIP, "shrink-0 bg-muted text-muted-foreground", FOCUS_RING)}>
+          <button
+            type="button"
+            aria-label={moreTagsLabel(hidden.length)}
+            onKeyDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            +{hidden.length}
+          </button>
+        </Badge>
       </PopoverTrigger>
       <PopoverContent className="max-w-80 p-1.5" onClick={(e) => e.stopPropagation()}>
         <div className="flex flex-wrap gap-1">

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "native-select",
+  "title": "Native select",
+  "description": "A native select on the inset field surface, so it needs no portal, with the chevron as an icon.",
+  "dependencies": [
+    "lucide-react@^0.510.0"
+  ],
+  "registryDependencies": [
+    "@koderi/utils",
+    "@koderi/field-control"
+  ],
+  "files": [
+    {
+      "path": "src/ui/primitives/native-select.tsx",
+      "content": "import type * as React from \"react\";\nimport { ChevronDown } from \"lucide-react\";\nimport { cn } from \"@/ui/utils\";\nimport { fieldControlClass, fieldFocusClass } from \"@/ui/primitives/field-control\";\n\n/** A native select, so it needs no portal: the right pick inside a table row or a dense form. */\nfunction NativeSelect({\n  className,\n  size = \"default\",\n  ...props\n}: Omit<React.ComponentProps<\"select\">, \"size\"> & { size?: \"sm\" | \"default\" }) {\n  return (\n    <div\n      data-slot=\"native-select-wrapper\"\n      className=\"group/native-select relative w-full has-[select:disabled]:opacity-50\"\n    >\n      <select\n        data-slot=\"native-select\"\n        data-size={size}\n        className={cn(\n          \"h-10 w-full min-w-0 appearance-none py-2 pr-10 pl-3 text-sm disabled:pointer-events-none disabled:cursor-not-allowed data-[size=sm]:h-8 data-[size=sm]:py-1 data-[size=sm]:pr-8 data-[size=sm]:pl-2 data-[size=sm]:text-xs\",\n          fieldControlClass,\n          fieldFocusClass,\n          className,\n        )}\n        {...props}\n      />\n      <ChevronDown\n        aria-hidden=\"true\"\n        data-slot=\"native-select-icon\"\n        className=\"pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground select-none group-has-[[data-size=sm]]/native-select:right-2 group-has-[[data-size=sm]]/native-select:size-3.5\"\n      />\n    </div>\n  );\n}\n\nfunction NativeSelectOption({ className, ...props }: React.ComponentProps<\"option\">) {\n  return (\n    <option\n      data-slot=\"native-select-option\"\n      className={cn(\"bg-popover text-popover-foreground\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction NativeSelectOptGroup({ className, ...props }: React.ComponentProps<\"optgroup\">) {\n  return (\n    <optgroup\n      data-slot=\"native-select-optgroup\"\n      className={cn(\"bg-popover text-popover-foreground\", className)}\n      {...props}\n    />\n  );\n}\n\nexport { NativeSelect, NativeSelectOptGroup, NativeSelectOption };\n",
+      "type": "registry:file",
+      "target": "src/ui/primitives/native-select.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

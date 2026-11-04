@@ -25,6 +25,27 @@ npx shadcn add @koderi/starter   # everything
 npx shadcn add @koderi/app-shell # one item
 ```
 
+## Light and dark
+
+The theme is shadcn's default neutral palette, light on `:root` and dark on `.dark`.
+Wrap the app in `ThemeProvider` (`@koderi/theme-provider`) and put `ModeToggle`
+(`@koderi/mode-toggle`) where the switcher should go, such as the shell's `headerEnd`.
+So the first paint is already in the right theme, add this to `index.html`'s `<head>`:
+
+```html
+<script>
+  try {
+    const stored = JSON.parse(localStorage.getItem("ui-theme") ?? '"system"');
+    const dark =
+      stored === "dark" ||
+      (stored !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.add(dark ? "dark" : "light");
+  } catch {
+    document.documentElement.classList.add("light");
+  }
+</script>
+```
+
 ## Developing
 
 ```sh

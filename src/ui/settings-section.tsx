@@ -1,6 +1,7 @@
 import { Save, type LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/ui/primitives/button";
+import { Separator } from "@/ui/primitives/separator";
 import { cn } from "@/ui/utils";
 
 export type SettingsSectionDefinition<Id extends string = string> = {
@@ -38,35 +39,37 @@ export function SettingsSectionLayout<Id extends string>({
             const Icon = item.icon;
             const active = item.id === section.id;
             return (
-              <button
+              <Button
                 key={item.id}
                 type="button"
+                variant="ghost"
                 aria-current={active ? "page" : undefined}
                 onClick={() => onSectionChange(item.id)}
                 className={cn(
-                  "flex shrink-0 items-center gap-2.5 rounded-md px-3 py-2 text-left transition-colors md:w-full",
-                  active
-                    ? "bg-secondary text-foreground shadow-[var(--shadow-border)]"
-                    : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                  "h-auto shrink-0 justify-start gap-2.5 px-3 py-2 text-left font-normal whitespace-normal md:w-full",
+                  active && "bg-secondary text-foreground shadow-[var(--shadow-border)]",
                 )}
               >
-                <Icon className="size-4 shrink-0" />
+                <Icon aria-hidden="true" />
                 <span className="grid gap-0.5">
                   <span className="text-sm font-medium">{item.label}</span>
                   <span className="hidden text-[11px] leading-tight text-muted-foreground md:block">
                     {item.description}
                   </span>
                 </span>
-              </button>
+              </Button>
             );
           })}
         </div>
       </nav>
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div className="grid w-full max-w-2xl content-start gap-4 px-4 py-4 md:px-6 md:py-5">
-          <div className="border-b border-border pb-3">
-            <h3 className="text-base font-semibold">{section.label}</h3>
-            <p className="mt-0.5 text-xs text-muted-foreground">{section.description}</p>
+          <div className="grid gap-3">
+            <div>
+              <h3 className="text-base font-semibold">{section.label}</h3>
+              <p className="mt-0.5 text-xs text-muted-foreground">{section.description}</p>
+            </div>
+            <Separator />
           </div>
           {children}
         </div>

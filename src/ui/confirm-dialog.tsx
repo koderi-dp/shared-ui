@@ -1,14 +1,21 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/ui/primitives/dialog";
-import { Button } from "@/ui/primitives/button";
 import type { ReactNode } from "react";
 import { Check, TriangleAlert } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/ui/primitives/alert-dialog";
+import { Button } from "@/ui/primitives/button";
 
+/**
+ * An alert dialog for a step that needs a yes: a click outside does not dismiss it.
+ * The confirm button is a plain Button, not AlertDialogAction, so the dialog stays
+ * open while `pending` and the caller closes it when the work is done.
+ */
 export function ConfirmDialog({
   open,
   title,
@@ -33,22 +40,15 @@ export function ConfirmDialog({
   children?: ReactNode;
 }) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
         {children}
-        <div className="flex justify-end gap-2">
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={pending}
-            onClick={() => onOpenChange(false)}
-          >
-            {cancelLabel}
-          </Button>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={pending}>{cancelLabel}</AlertDialogCancel>
           <Button
             icon={destructive ? TriangleAlert : Check}
             loading={pending}
@@ -59,8 +59,8 @@ export function ConfirmDialog({
           >
             {confirmLabel}
           </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

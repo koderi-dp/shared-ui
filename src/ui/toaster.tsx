@@ -1,10 +1,9 @@
-import { Toaster as Sonner } from "sonner";
+import { Toaster } from "@/ui/primitives/sonner";
 
-/** Sonner, drawn with the `app-toast` classes in styles.css. Mount once at the root. */
+/** The shadcn Sonner toaster, drawn with the `app-toast` classes in styles.css. Mount once at the root. */
 export function AppToaster() {
   return (
-    <Sonner
-      theme="dark"
+    <Toaster
       position="bottom-right"
       closeButton
       duration={3500}

@@ -1,7 +1,7 @@
 /**
  * Colours for one line per series, in this fixed order. They are not the muted
  * Pylon tokens: those sit too close together to tell lines apart (checked with the
- * palette validator on the card surface #12141a; this set passes for colour-blind and
+ * palette validator on the dark and light card surfaces; this set passes for colour-blind and
  * normal vision). A series keeps its colour by its position, so
  * removing one does not repaint the others. Past eight, lines are drawn in grey.
  */

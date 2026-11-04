@@ -28,7 +28,7 @@ describe("usageBarFillClass", () => {
     }
   });
   it("uses a neutral fill for cpu and emerald for memory and disk when ok", () => {
-    expect(usageBarFillClass(10, "cpu")).toBe("bg-foreground/65");
+    expect(usageBarFillClass(10, "cpu")).toBe("bg-muted-foreground/45");
     expect(usageBarFillClass(10, "memory")).toBe("bg-emerald-500");
     expect(usageBarFillClass(10, "disk")).toBe("bg-emerald-500");
   });
